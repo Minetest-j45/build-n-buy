@@ -1,0 +1,1 @@
+The textures in this folder are not made by me but are under the CC-BY-SA 4.0 license and can be found at https://content.minetest.net/packages/Zughy/soothing32/

@@ -1,0 +1,1 @@
+For the licenses for each texture, see the README.md in the corresponding folder.
