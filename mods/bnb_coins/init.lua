@@ -17,6 +17,10 @@ bnb_coins.add_player_coins = function(name, amount)
     bnb_coins.set_player_coins(name, bnb_coins.get_player_coins(name) + amount)
 end
 
+bnb_coins.remove_player_coins = function(name, amount)
+    bnb_coins.set_player_coins(name, bnb_coins.get_player_coins(name) - amount)
+end
+
 --HUD things
 minetest.register_on_joinplayer(function(player)
     local name = player:get_player_name()
@@ -54,3 +58,10 @@ minetest.register_globalstep(function(dtime)
         end
     end
 end)
+--for dev only
+minetest.register_chatcommand("scoins", {
+    description = "Set your coins",
+    func = function(name, amount)
+        bnb_coins.set_player_coins(name, amount)
+    end
+})

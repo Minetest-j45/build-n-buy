@@ -61,6 +61,15 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
         if node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
             minetest.chat_send_player(puncher:get_player_name(), "This is the demo you need to replicate!")
         end
+    elseif node.name:find("bnb_nodes:shop_") then
+        local selling = node.name:gsub("shop_", "")
+        local coins = bnb_coins.get_player_coins(puncher:get_player_name())
+        if coins >= 1 then
+            bnb_coins.remove_player_coins(puncher:get_player_name(), 1)
+            puncher:get_inventory():add_item("main", selling)
+        else
+            minetest.chat_send_player(puncher:get_player_name(), "You don't have enough coins!")
+        end
     else
         return false
     end
