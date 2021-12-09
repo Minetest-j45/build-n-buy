@@ -8,28 +8,6 @@ minetest.register_craftitem("bnb_nodes:stick", {
     end
 })
 
---logs
-minetest.register_node(minetest.get_current_modname()..":oak_log", {
-    description = "Oak Log",
-    tiles = {"log_oak_top.png", "log_oak_top.png", "log_oak.png"},
-})
-minetest.register_node(minetest.get_current_modname()..":pine_log", {
-    description = "Pine Log",
-    tiles = {"log_pine_top.png", "log_pine_top.png", "log_pine.png"},
-})
-minetest.register_node(minetest.get_current_modname()..":beech_log", {
-    description = "Beech Log",
-    tiles = {"log_beech_top.png", "log_beech_top.png", "log_beech.png"},
-})
-minetest.register_node(minetest.get_current_modname()..":ash_log", {
-    description = "Ash Log",
-    tiles = {"log_ash_top.png", "log_ash_top.png", "log_ash.png"},
-})
-minetest.register_node(minetest.get_current_modname()..":teak_log", {
-    description = "Teak Log",
-    tiles = {"log_teak_top.png", "log_teak_top.png", "log_teak.png"},
-})
-
 --quartz
 minetest.register_node(minetest.get_current_modname()..":quartz_block", {
     description = "Quartz Block",
@@ -174,7 +152,6 @@ minetest.register_node(minetest.get_current_modname()..":quartz_finished", {
 minetest.register_node(minetest.get_current_modname()..":light_block", {
     description = "Light Block",
     tiles = {"light.png"},
-    --emmits light
     light_source = 14,
 })
 
@@ -197,45 +174,19 @@ local register_glass = function(name, desc, extra)
     })
 end
 
-local wools = {
-    {"red", "Red"},
-    {"blue", "Blue"},
-    {"grey", "Grey", "^[colorize:#000F:70"},
-    {"black", "Black"},
-    {"brown", "Brown"},
-    {"cyan", "Cyan"},
-    {"dark_green", "Dark Green"},
-    {"green", "Green"},
-    {"light_grey", "Light Grey"},
-    {"magenta", "Magenta"},
-    {"orange", "Orange"},
-    {"pink", "Pink"},
-    {"violet", "Violet"},
-    {"white", "White"},
-    {"yellow", "Yellow"},
-}
-
---[[minetest.register_node(minetest.get_current_modname()..":grey_stained_glass", {
-    description = "Grey Stained Glass",
-    drawtype = "glasslike",
-    use_texture_alpha = true,
-    --tiles = {"grey_glass.png^[colorize:#000F:100"},
-    tiles = {"grey_wool.png^[opacity:210"},
-    light_source = 1,
-})]]
-
-
---[[minetest.register_node(minetest.get_current_modname()..":grey_stained_glass_slab", {
-    description = "Grey Stained Glass",
-    drawtype = "nodebox",
-    use_texture_alpha = true,
-    tiles = {"grey_glass.png^[colorize:#000F:100"},
-    node_box = {
-        type = "fixed",
-        fixed = {-0.5, -0.5, -0.5, 0.5, 0, 0.5},
-    },
-    light_source = 1,
-})]]
+--logs
+local register_log = function(name, desc)
+    minetest.register_node(minetest.get_current_modname()..":"..name.."_log", {
+        description = desc.." Log",
+        tiles = {"log_"..name.."_top.png", "log_"..name.."_top.png", "log_"..name..".png"}
+    })
+end
+local register_plank = function (name, desc)
+    minetest.register_node(minetest.get_current_modname()..":"..name.."_plank", {
+        description = desc.." Plank",
+        tiles = {name.."_plank.png"}
+    })
+end
 
 --signs
 
@@ -257,6 +208,14 @@ register_sign("oak_o", "Oak O Sign", {"log_oak_top.png", "log_oak_top.png", "log
 register_sign("beech_o", "Beech O Sign", {"log_beech_top.png", "log_beech_top.png", "log_beech.png^font_o.png"})
 register_sign("teak_d", "Teak D Sign", {"log_teak_top.png", "log_teak_top.png", "log_teak.png^font_d.png"})
 
+--signs for planks
+register_sign("pine_plank_p", "Pine Plank P Sign", {"pine_plank.png", "pine_plank.png", "pine_plank.png^font_p.png"})
+register_sign("oak_plank_l", "Oak Plank L Sign", {"oak_plank.png", "oak_plank.png", "oak_plank.png^font_l.png"})
+register_sign("beech_plank_a", "Beech Plank A Sign", {"beech_plank.png", "beech_plank.png", "beech_plank.png^font_a.png"})
+register_sign("teak_plank_n", "Teak Plank N Sign", {"teak_plank.png", "teak_plank.png", "teak_plank.png^font_n.png"})
+register_sign("ash_plank_k", "Ash Plank K Sign", {"ash_plank.png", "ash_plank.png", "ash_plank.png^font_k.png"})
+register_sign("pine_plank_s", "Pine Plank S Sign", {"pine_plank.png", "pine_plank.png", "pine_plank.png^font_s.png"})
+
 register_sign("pink_g", "Pink G Sign", {"pink_wool.png", "pink_wool.png", "pink_wool.png^font_g.png"})
 register_sign("brown_l", "Brown L Sign", {"brown_wool.png", "brown_wool.png", "brown_wool.png^font_l.png"})
 register_sign("red_a", "Red A Sign", {"red_wool.png", "red_wool.png", "red_wool.png^font_a.png"})
@@ -274,45 +233,55 @@ local register_shop = function(item, desc, overlay, extra)
         tiles = {"blue_wool.png", "blue_wool.png", "[combine:128x128:0,0=(blue_wool.png^shopping_cart.png\\^[resize\\:128x128):48,56="..overlay.."\\^[resize\\:32x32"..extra},
         groups = {shop = 1},
         light_source = 1,
-        --on point, show name of block hud
     })
 end
 
---[[register_shop("red_wool", "Red Wool Shop", "red_wool.png")
-register_shop("blue_wool", "Blue Wool Shop", "blue_wool.png")
-register_shop("grey_wool", "Grey Wool Shop", "grey_wool.png")
-register_shop("black_wool", "Black Wool Shop", "black_wool.png")
-register_shop("brown_wool", "Brown Wool Shop", "brown_wool.png")
-register_shop("cyan_wool", "Cyan Wool Shop", "cyan_wool.png")
-register_shop("dark_green_wool", "Dark Green Wool Shop", "dark_green_wool.png")
-register_shop("green_wool", "Green Wool Shop", "green_wool.png")
-register_shop("light_grey_wool", "Light Grey Wool Shop", "light_grey_wool.png")
-register_shop("magenta_wool", "Magenta Wool Shop", "magenta_wool.png")
-register_shop("orange_wool", "Orange Wool Shop", "orange_wool.png")
-register_shop("pink_wool", "Pink Wool Shop", "pink_wool.png")
-register_shop("violet_wool", "Violet Wool Shop", "violet_wool.png")
-register_shop("white_wool", "White Wool Shop", "white_wool.png")
-register_shop("yellow_wool", "Yellow Wool Shop", "yellow_wool.png")]]
+local wools = {
+    {"red", "Red"},
+    {"blue", "Blue"},
+    {"grey", "Grey", "^[colorize:#000F:70"},
+    {"black", "Black"},
+    {"brown", "Brown"},
+    {"cyan", "Cyan"},
+    {"dark_green", "Dark Green"},
+    {"green", "Green"},
+    {"light_grey", "Light Grey"},
+    {"magenta", "Magenta"},
+    {"orange", "Orange"},
+    {"pink", "Pink"},
+    {"violet", "Violet"},
+    {"white", "White"},
+    {"yellow", "Yellow"},
+}
 
 for _, wool in ipairs(wools) do
     --normal wools
     register_wool(wool[1], wool[2])
+    register_shop(wool[1].."_wool", wool[2].."Wool Shop", wool[1].."_wool.png")
+
     --glasses
     if not wool[3] then
        wool[3] = ""
     end
     register_glass(wool[1], wool[2], wool[3])
-    --normal shops
-    register_shop(wool[1].."_wool", wool[2].."Wool Shop", wool[1].."_wool.png")
-    --glass shops
     register_shop(wool[1].."_stained_glass", wool[2].." Stained Glass Shop", wool[1].."_wool.png", "\\^[opacity\\:210")
 end
 
-register_shop("oak_log", "Oak Log Shop", "log_oak.png")
-register_shop("pine_log", "Pine Log Shop", "log_pine.png")
-register_shop("beech_log", "Beech Log Shop", "log_beech.png")
-register_shop("ash_log", "Ash Log Shop", "log_ash.png")
-register_shop("teak_log", "Teak Log Shop", "log_teak.png")
+
+local woods = {
+    {"oak", "Oak"},
+    {"pine", "Pine"},
+    {"beech", "Beech"},
+    {"ash", "Ash"},
+    {"teak", "Teak"}
+}
+for _,wood in ipairs(woods) do
+    register_log(wood[1], wood[2])
+    register_shop(wood[1].."_log", wood[2].." Log Shop", "log_"..wood[1]..".png")
+
+    register_plank(wood[1], wood[2])
+    register_shop(wood[1].."_plank", wood[2].." Plank Shop", wood[1].."_plank.png")
+end
 
 --make it so when you look at a shop, it adds the name of the node it is selling to your hud
 minetest.register_globalstep(function(dtime)
