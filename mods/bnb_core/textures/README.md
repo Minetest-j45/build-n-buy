@@ -1,0 +1,1 @@
+The textures in this folder are not made by me but are under the CC-BY-SA 4.0 license, all but the skin texture can be found at https://content.minetest.net/packages/Zughy/soothing32/. The skin texture can be found at https://gitlab.com/arcadeemulationserver/skins_collectible/.

@@ -1,0 +1,1 @@
+The models in this folder are not made by me but are under the CC-BY-SA 3.0 license and can be found at https://github.com/minetest/minetest_game/tree/master/mods/player_api.

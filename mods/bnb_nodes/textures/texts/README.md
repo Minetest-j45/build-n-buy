@@ -1,1 +1,1 @@
-I made the textures in this folder, these are under CC-BY-SA 4.0
+I(j45) made the textures in this folder, these are under CC-BY-SA 4.0

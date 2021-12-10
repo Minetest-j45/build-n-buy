@@ -6,8 +6,12 @@ bnb_core.building_max = {x = -5, y = 105, z = 3}
 bnb_core.demo_min = {x = 5, y = 102, z = -3}
 bnb_core.demo_max = { x = 11, y = 105, z = 3}
 
-bnb_core.start = function(player)
+bnb_core.tp_build = function(player)
     player:set_pos(bnb_core.play_pos)
+end
+
+bnb_core.start = function(player)
+    bnb_core.tp_build(player)
 end
 
 bnb_core.tp_shop = function(player)
@@ -74,3 +78,24 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
         return false
     end
 end)
+
+minetest.register_on_joinplayer(function(player)
+    player:hud_set_hotbar_image("gui_hotbar.png")
+    player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
+    player:set_properties({
+        mesh = "character.b3d",
+        visual = "mesh",
+        visual_size = {x=1, y=1},
+        collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
+        stepheight = 0.6,
+        eye_height = 1.47,
+        textures = {"bob_skin.png"},
+    })
+end)
+
+--new hand texture
+minetest.register_item(":", {
+    type = "none",
+    wield_image = "wieldhand.png",
+    wield_scale = {x=1,y=1,z=2.5},
+})

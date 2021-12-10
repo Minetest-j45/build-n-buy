@@ -148,6 +148,14 @@ minetest.register_node(minetest.get_current_modname()..":quartz_finished", {
     end
 })
 
+minetest.register_node(minetest.get_current_modname()..":quartz_build", {
+    description = "Quartz Build",
+    tiles = {"quartz_block.png^build_text.png"},
+    on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+        bnb_core.tp_build(player)
+    end
+})
+
 --lantern
 minetest.register_node(minetest.get_current_modname()..":light_block", {
     description = "Light Block",
@@ -155,8 +163,20 @@ minetest.register_node(minetest.get_current_modname()..":light_block", {
     light_source = 14,
 })
 
+minetest.register_node(minetest.get_current_modname()..":stone_block", {
+    description = "Stone Block",
+    tiles = {"stone.png"},
+})
 
-local function register_wool(name, desc)
+--funcs
+local register_ore = function (name, desc)
+    minetest.register_node(minetest.get_current_modname()..":"..name.."_ore", {
+        description = desc.." Ore",
+        tiles = {"stone.png^"..name.."_ore.png"},
+    })
+end--coal copper dia gold iron mese tin
+
+local register_wool = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name .. "_wool", {
         description = desc.." Wool",
         tiles = {name .. "_wool.png"},
@@ -198,11 +218,13 @@ local register_sign = function(name, desc, tilez)
     })
 end
 
+--wool signs
 register_sign("magenta_w", "Magenta W Sign", {"magenta_wool.png", "magenta_wool.png", "magenta_wool.png^font_w.png"})
 register_sign("orange_o", "Orange O Sign", {"orange_wool.png", "orange_wool.png", "orange_wool.png^font_o.png"})
 register_sign("cyan_o", "Cyan O Sign", {"cyan_wool.png", "cyan_wool.png", "cyan_wool.png^font_o.png"})
 register_sign("green_l", "Green L Sign", {"green_wool.png", "green_wool.png", "green_wool.png^font_l.png"})
 
+--log signs
 register_sign("pine_w", "Pine W Sign", {"log_pine_top.png", "log_pine_top.png", "log_pine.png^font_w.png"})
 register_sign("oak_o", "Oak O Sign", {"log_oak_top.png", "log_oak_top.png", "log_oak.png^font_o.png"})
 register_sign("beech_o", "Beech O Sign", {"log_beech_top.png", "log_beech_top.png", "log_beech.png^font_o.png"})
@@ -216,11 +238,18 @@ register_sign("teak_plank_n", "Teak Plank N Sign", {"teak_plank.png", "teak_plan
 register_sign("ash_plank_k", "Ash Plank K Sign", {"ash_plank.png", "ash_plank.png", "ash_plank.png^font_k.png"})
 register_sign("pine_plank_s", "Pine Plank S Sign", {"pine_plank.png", "pine_plank.png", "pine_plank.png^font_s.png"})
 
+--wool signs
 register_sign("pink_g", "Pink G Sign", {"pink_wool.png", "pink_wool.png", "pink_wool.png^font_g.png"})
 register_sign("brown_l", "Brown L Sign", {"brown_wool.png", "brown_wool.png", "brown_wool.png^font_l.png"})
 register_sign("red_a", "Red A Sign", {"red_wool.png", "red_wool.png", "red_wool.png^font_a.png"})
 register_sign("magenta_s", "Magenta S Sign", {"magenta_wool.png", "magenta_wool.png", "magenta_wool.png^font_s.png"})
 register_sign("violet_s", "Violet S Sign", {"violet_wool.png", "violet_wool.png", "violet_wool.png^font_s.png"})
+
+--ore signs
+register_sign("coal_o", "Coal O Sign", {"stone.png^coal_ore.png", "stone.png^coal_ore.png", "stone.png^coal_ore.png^font_o.png"})
+register_sign("copper_r", "Copper R Sign", {"stone.png^copper_ore.png", "stone.png^copper_ore.png", "stone.png^copper_ore.png^font_r.png"})
+register_sign("mese_e", "Mese E Sign", {"stone.png^mese_ore.png", "stone.png^mese_ore.png", "stone.png^mese_ore.png^font_e.png"})
+register_sign("diamond_s", "Diamond S Sign", {"stone.png^diamond_ore.png", "stone.png^diamond_ore.png", "stone.png^diamond_ore.png^font_s.png"})
 
 --shops
 local register_shop = function(item, desc, overlay, extra)
@@ -283,6 +312,21 @@ for _,wood in ipairs(woods) do
     register_shop(wood[1].."_plank", wood[2].." Plank Shop", wood[1].."_plank.png")
 end
 
+local ores = {
+    {"coal", "Coal"},
+    {"copper", "Copper"},
+    {"diamond", "Diamond"},
+    {"gold", "Gold"},
+    {"iron", "Iron"},
+    {"mese", "Mese"},
+    {"tin", "Tin"},
+
+}
+
+for _,ore in ipairs(ores) do
+    register_ore(ore[1], ore[2])
+    register_shop(ore[1].."_ore", ore[2].." Ore Shop", "(stone.png^"..ore[1].."_ore.png)")
+end
 --make it so when you look at a shop, it adds the name of the node it is selling to your hud
 minetest.register_globalstep(function(dtime)
     for _,player in ipairs(minetest.get_connected_players()) do
