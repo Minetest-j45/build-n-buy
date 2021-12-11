@@ -170,12 +170,19 @@ minetest.register_node(minetest.get_current_modname()..":stone_block", {
 })
 
 --funcs
-local register_ore = function (name, desc)
+local register_ore = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_ore", {
         description = desc.." Ore",
         tiles = {"stone.png^"..name.."_ore.png"},
     })
-end--coal copper dia gold iron mese tin
+end
+
+local register_block = function(name, desc)
+    minetest.register_node(minetest.get_current_modname()..":"..name.."_block", {
+        description = desc,
+        tiles = {name.."_block.png"},
+    })
+end
 
 local register_wool = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name .. "_wool", {
@@ -252,6 +259,14 @@ register_sign("copper_r", "Copper R Sign", {"stone.png^copper_ore.png", "stone.p
 register_sign("mese_e", "Mese E Sign", {"stone.png^mese_ore.png", "stone.png^mese_ore.png", "stone.png^mese_ore.png^font_e.png"})
 register_sign("diamond_s", "Diamond S Sign", {"stone.png^diamond_ore.png", "stone.png^diamond_ore.png", "stone.png^diamond_ore.png^font_s.png"})
 
+--blocks signs
+register_sign("coal_b", "Coal B Sign", {"coal_block.png", "coal_block.png", "coal_block.png^font_b.png"})
+register_sign("copper_l", "Copper L Sign", {"copper_block.png", "copper_block.png", "copper_block.png^font_l.png"})
+register_sign("mese_o", "Mese O Sign", {"mese_block.png", "mese_block.png", "mese_block.png^font_o.png"})
+register_sign("diamond_c", "Diamond C Sign", {"diamond_block.png", "diamond_block.png", "diamond_block.png^font_c.png"})
+register_sign("gold_k", "Gold K Sign", {"gold_block.png", "gold_block.png", "gold_block.png^font_k.png"})
+register_sign("iron_s", "Iron S Sign", {"iron_block.png", "iron_block.png", "iron_block.png^font_s.png"})
+
 --shops
 local register_shop = function(item, desc, overlay, extra)
     if not extra then
@@ -327,6 +342,9 @@ local ores = {
 for _,ore in ipairs(ores) do
     register_ore(ore[1], ore[2])
     register_shop(ore[1].."_ore", ore[2].." Ore Shop", "(stone.png^"..ore[1].."_ore.png)")
+
+    register_block(ore[1], ore[2])
+    register_shop(ore[1].."_block", ore[2].." Block Shop", ore[1].."_block.png")
 end
 --make it so when you look at a shop, it adds the name of the node it is selling to your hud
 minetest.register_globalstep(function(dtime)
@@ -353,7 +371,6 @@ minetest.register_globalstep(function(dtime)
                         scale = {x = 1, y = 1},
                         number = 0xe6482e,
                     })
-                    --remove hud after 1 second
                     minetest.after(0.1, function()
                         player:hud_remove(n)
                     end)
