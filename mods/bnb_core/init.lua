@@ -12,6 +12,7 @@ end
 
 bnb_core.start = function(player)
     bnb_core.tp_build(player)
+    bnb_coins.add_player_coins(player:get_player_name(), 25)
 end
 
 bnb_core.tp_shop = function(player)
@@ -35,16 +36,37 @@ bnb_core.finished = function()
     return true
 end
 
-minetest.register_chatcommand("check", {
-    description = "Check if the areas are the same",
-    func = function(name)
-        minetest.chat_send_all(dump(bnb_core.finished()))
-    end,
-})
+bnb_core.complete = function(complete, player)
+    local pname = player:get_player_name()
+    if complete then
+        bnb_coins.add_player_coins(pname, 50)
+        --set demo area and building area to air
+        for x = bnb_core.demo_min.x, bnb_core.demo_max.x do
+        for y = bnb_core.demo_min.y, bnb_core.demo_max.y do
+        for z = bnb_core.demo_min.z, bnb_core.demo_max.z do
+            local pos = {x = x, y = y, z = z}
+            minetest.set_node(pos, {name = "air"})
+        end
+        end
+        end
+
+        for x = bnb_core.building_min.x, bnb_core.building_max.x do
+        for y = bnb_core.building_min.y, bnb_core.building_max.y do
+        for z = bnb_core.building_min.z, bnb_core.building_max.z do
+            local pos = {x = x, y = y, z = z}
+            minetest.set_node(pos, {name = "air"})
+        end
+        end
+        end
+        --place schem for new demo
+    else
+        minetest.chat_send_player(pname, minetest.colorize("#71aa34", "Your build is not the same as the demo. Please try again."))
+    end
+end
 
 local punching = false
-local punchtimer = 0
 minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
+    minetest.chat_send_all("Punched nodepos: "..pos.x.." "..pos.y.." "..pos.z)
     if punching then
         return
     end
@@ -63,7 +85,7 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
         end
     elseif node_pos.x >= bnb_core.demo_min.x and node_pos.x <= bnb_core.demo_max.x and node_pos.z >= bnb_core.demo_min.z and node_pos.z <= bnb_core.demo_max.z then
         if node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
-            minetest.chat_send_player(puncher:get_player_name(), "This is the demo you need to replicate!")
+            minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "This is the demo you need to replicate!"))
         end
     elseif node.name:find("bnb_nodes:shop_") then
         local selling = node.name:gsub("shop_", "")
@@ -72,14 +94,35 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
             bnb_coins.remove_player_coins(puncher:get_player_name(), 1)
             puncher:get_inventory():add_item("main", selling)
         else
-            minetest.chat_send_player(puncher:get_player_name(), "You don't have enough coins!")
+            minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "You don't have enough coins!"))
         end
     else
         return false
     end
 end)
 
+local spawnmin = {x = -5, y = -2, z = -5}
+local spawnmax = {x = 5, y = 8, z = 5}
+local arenamin = {x = -19, y = 100, z = -11}
+local arenamax = {x = 19, y = 109, z = 11}
+local mod_storage = minetest.get_mod_storage()--must be called at load time
 minetest.register_on_joinplayer(function(player)
+    local placed_already = mod_storage:get_int("placed_already")
+    if placed_already == 0 then
+        mod_storage:set_int("placed_already", 1)
+        --emerge to place schems
+        minetest.emerge_area(spawnmin, spawnmax, function(blockpos, action, remaining)
+            if remaining == 0 then
+                bnb_schems.place(spawnmin, "spawn", 0, nil, true)
+            end
+        end)
+        minetest.emerge_area(arenamin, arenamax, function(blockpos, action, remaining)
+            if remaining == 0 then
+                bnb_schems.place(arenamin, "arena", 0, nil, true)
+            end
+        end)
+    end
+
     player:hud_set_hotbar_image("gui_hotbar.png")
     player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
     player:set_properties({
@@ -91,7 +134,9 @@ minetest.register_on_joinplayer(function(player)
         eye_height = 1.47,
         textures = {"bob_skin.png"},
     })
+    minetest.sound_play("bg_music", {to_player = player:get_player_name(), gain = 0.6, loop = true})
 end)
+
 
 --new hand texture
 minetest.register_item(":", {
@@ -99,3 +144,20 @@ minetest.register_item(":", {
     wield_image = "wieldhand.png",
     wield_scale = {x=1,y=1,z=2.5},
 })
+--passive income
+local timer = 0
+minetest.register_globalstep(function(dtime)
+    timer = timer + dtime
+    if timer >= 10 then
+        timer = 0
+        for _, player in ipairs(minetest.get_connected_players()) do
+            bnb_coins.add_player_coins(player:get_player_name(), 1)
+        end
+    end
+end)
+
+minetest.register_on_chat_message(function(name, message)
+    local newmsg = minetest.colorize("#b6d53c", "<"..name.."> "..message)
+    minetest.chat_send_all(newmsg)
+    return newmsg
+end)

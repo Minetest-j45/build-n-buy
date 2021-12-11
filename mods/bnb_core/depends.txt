@@ -1,1 +1,2 @@
 bnb_coins
+bnb_schems

@@ -30,7 +30,7 @@ minetest.register_on_joinplayer(function(player)
         position = {x = 0.1, y = 0.9},
         offset = {x = 0, y = 0},
         text = "Coins: " .. coins,
-        number = 0xFFFFFF,
+        number = 0xf4b41b,
         alignment = {x = 0, y = 0},
         --scale = {x = 350, y = 350},
     })

@@ -144,7 +144,8 @@ minetest.register_node(minetest.get_current_modname()..":quartz_finished", {
     description = "Quartz Finished",
     tiles = {"quartz_block.png^finished_text.png"},
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-        bnb_core.finished()
+        local complete = bnb_core.finished()
+        bnb_core.complete(complete, player)
     end
 })
 
@@ -188,7 +189,7 @@ local register_glass = function(name, desc, extra)
     minetest.register_node(minetest.get_current_modname()..":"..name .. "_stained_glass", {
         description = desc.. " Stained Glass",
         drawtype = "glasslike",
-        use_texture_alpha = true,
+        use_texture_alpha = "blend",
         tiles = {name .. "_wool.png^[opacity:210".. extra},
         light_source = 1,
     })
@@ -350,7 +351,7 @@ minetest.register_globalstep(function(dtime)
                         text = "Selling: "..name,
                         alignment = {x = 0, y = 0},
                         scale = {x = 1, y = 1},
-                        number = 0xFF0000,
+                        number = 0xe6482e,
                     })
                     --remove hud after 1 second
                     minetest.after(0.1, function()
