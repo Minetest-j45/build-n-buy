@@ -12,7 +12,6 @@ minetest.register_craftitem("bnb_nodes:stick", {
 minetest.register_node(minetest.get_current_modname()..":quartz_block", {
     description = "Quartz Block",
     tiles = {"quartz_block.png"},
-    groups = {choppy = 2, oddly_breakable_by_hand = 2,},
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_slab", {
@@ -164,16 +163,44 @@ minetest.register_node(minetest.get_current_modname()..":light_block", {
     light_source = 14,
 })
 
-minetest.register_node(minetest.get_current_modname()..":stone_block", {
+--[[minetest.register_node(minetest.get_current_modname()..":stone_block", {
     description = "Stone Block",
     tiles = {"stone.png"},
-})
+})]]
 
 --funcs
 local register_ore = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_ore", {
         description = desc.." Ore",
         tiles = {"stone.png^"..name.."_ore.png"},
+    })
+end
+
+local register_stone = function(name, desc)
+    minetest.register_node(minetest.get_current_modname()..":"..name, {
+        description = desc.." Stone",
+        tiles = {name..".png"},
+    })
+end
+
+local register_liquid = function(name, desc)
+    minetest.register_node(minetest.get_current_modname()..":"..name, {
+        description = desc,
+        tiles = {name..".png"},
+    })
+end
+
+local register_dirt = function(name, desc, texture)
+    minetest.register_node(minetest.get_current_modname()..":"..name, {
+        description = desc,
+        tiles = texture,
+    })
+end
+
+local register_sand = function(name, desc)
+    minetest.register_node(minetest.get_current_modname()..":"..name, {
+        description = desc,
+        tiles = {name..".png"},
     })
 end
 
@@ -267,6 +294,35 @@ register_sign("diamond_c", "Diamond C Sign", {"diamond_block.png", "diamond_bloc
 register_sign("gold_k", "Gold K Sign", {"gold_block.png", "gold_block.png", "gold_block.png^font_k.png"})
 register_sign("iron_s", "Iron S Sign", {"iron_block.png", "iron_block.png", "iron_block.png^font_s.png"})
 
+--stones signs
+register_sign("stone_s", "Stone S Sign", {"stone.png", "stone.png", "stone.png^font_s.png"})
+register_sign("polished_stone_t", "Polished Stone T Sign", {"polished_stone.png", "polished_stone.png", "polished_stone.png^font_t.png"})
+register_sign("brick_stone_o", "Brick Stone O Sign", {"brick_stone.png", "brick_stone.png", "brick_stone.png^font_o.png"})
+register_sign("desert_stone_n", "Desert Stone N Sign", {"desert_stone.png", "desert_stone.png", "desert_stone.png^font_n.png"})
+register_sign("polished_desert_stone_e", "Polished Desert Stone E Sign", {"polished_desert_stone.png", "polished_desert_stone.png", "polished_desert_stone.png^font_e.png"})
+register_sign("desert_brick_stone_s", "Desert Brick Stone S Sign", {"desert_brick_stone.png", "desert_brick_stone.png", "desert_brick_stone.png^font_s.png"})
+
+--liquids signs
+register_sign("water_f", "Water F Sign", {"water.png", "water.png", "water.png^font_f.png"})
+register_sign("lava_l", "Lava L Sign", {"lava.png", "lava.png", "lava.png^font_l.png"})
+register_sign("river_water_u", "River Water U Sign", {"river_water.png", "river_water.png", "river_water.png^font_u.png"})
+register_sign("lava_i", "Lava I Sign", {"lava.png", "lava.png", "lava.png^font_i.png"})
+register_sign("water_d", "Water D Sign", {"water.png", "water.png", "water.png^font_d.png"})
+register_sign("river_water_s", "River Water S Sign", {"river_water.png", "river_water.png", "river_water.png^font_s.png"})
+
+--dirts signs
+register_sign("dirt_d", "Dirt D Sign", {"dirt.png", "dirt.png", "dirt.png^font_d.png"})
+register_sign("dirt_with_grass_i", "Dirt With Grass I Sign", {"grass.png", "dirt.png", "dirt.png^grass_side.png^font_i.png"})
+register_sign("dirt_with_snow_r", "Dirt With Snow R Sign", {"snow.png", "dirt.png", "dirt.png^snow_side.png^font_r.png"})
+register_sign("dry_dirt_with_dry_grass_t", "Dry Dirt With Dry Grass T Sign", {"dry_grass.png", "dry_dirt.png", "dry_dirt.png^dry_grass_side.png^font_t.png"})
+register_sign("dry_dirt_s", "Dry Dirt S Sign", {"dry_dirt.png", "dry_dirt.png", "dry_dirt.png^font_s.png"})
+
+--sand signs
+register_sign("sand_s", "Sand S Sign", {"sand.png", "sand.png", "sand.png^font_s.png"})
+register_sign("silver_sand_a", "Silver Sand A Sign", {"silver_sand.png", "silver_sand.png", "silver_sand.png^font_a.png"})
+register_sign("sand_n", "Sand N Sign", {"sand.png", "sand.png", "sand.png^font_n.png"})
+register_sign("silver_sand_d", "Silver Sand D Sign", {"silver_sand.png", "silver_sand.png", "silver_sand.png^font_d.png"})
+
 --shops
 local register_shop = function(item, desc, overlay, extra)
     if not extra then
@@ -276,7 +332,7 @@ local register_shop = function(item, desc, overlay, extra)
         description = desc,
         --tiles = {"[combine:32x32:0,0=(blue_wool.png^shopping_cart.png):11,13=red_wool.png\\^[resize\\:10x10"},
         tiles = {"blue_wool.png", "blue_wool.png", "[combine:128x128:0,0=(blue_wool.png^shopping_cart.png\\^[resize\\:128x128):48,56="..overlay.."\\^[resize\\:32x32"..extra},
-        groups = {shop = 1},
+        --groups = {shop = 1},
         light_source = 1,
     })
 end
@@ -346,6 +402,54 @@ for _,ore in ipairs(ores) do
     register_block(ore[1], ore[2])
     register_shop(ore[1].."_block", ore[2].." Block Shop", ore[1].."_block.png")
 end
+
+local stones = {
+    {"stone", "Normal"},
+    {"brick_stone", "Brick"},
+    {"polished_stone", "Polished"},
+    {"desert_stone", "Desert"},
+    {"desert_brick_stone", "Desert Brick"},
+    {"polished_desert_stone", "Desert Polished"},
+}
+for _,stone in ipairs(stones) do
+    register_stone(stone[1], stone[2])
+    register_shop(stone[1], stone[2].." Stone Shop", stone[1]..".png")
+end
+
+local liquids = {
+    {"water", "Water"},
+    {"river_water", "River Water"},
+    {"lava", "Lava"},
+}
+
+for _,liquid in ipairs(liquids) do
+    register_liquid(liquid[1], liquid[2])
+    register_shop(liquid[1], liquid[2].." Shop", liquid[1]..".png")
+end
+
+
+local dirts = {
+    {"dirt", "Dirt", {"dirt.png"}},
+    {"dirt_with_grass", "Dirt With Grass", {"grass.png", "dirt.png", "dirt.png^grass_side.png"}},
+    {"dry_dirt", "Dry Dirt", {"dry_dirt.png"}},
+    {"dry_dirt_with_dry_grass", "Dry Dirt With Dry Grass", {"dry_grass.png", "dry_dirt.png", "dry_dirt.png^dry_grass_side.png"}},
+    {"dirt_with_snow", "Dirt With Snow", {"snow.png", "dirt.png", "dirt.png^snow_side.png"}},
+}
+for _,dirt in ipairs(dirts) do
+    register_dirt(dirt[1], dirt[2], dirt[3])
+    local sidetexture = dirt[3][3] or dirt[3][1]
+    register_shop(dirt[1], dirt[2].." Shop", "("..sidetexture..")")
+end
+
+local sands = {
+    {"sand", "Sand"},
+    {"silver_sand", "Silver Sand"},
+}
+for _,sand in ipairs(sands) do
+    register_sand(sand[1], sand[2])
+    register_shop(sand[1], sand[2].." Shop", sand[1]..".png")
+end
+
 --make it so when you look at a shop, it adds the name of the node it is selling to your hud
 minetest.register_globalstep(function(dtime)
     for _,player in ipairs(minetest.get_connected_players()) do

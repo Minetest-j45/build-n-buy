@@ -1,5 +1,4 @@
 # bnb_nodes
 Nodes for Build'N'Buy<br>
-License: MIT<br>
-See the README.md in the appropriate folder for the license of the contents of that folder.<br>
+Code License: MIT<br>
 author = j45
