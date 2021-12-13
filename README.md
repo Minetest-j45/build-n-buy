@@ -1,5 +1,5 @@
 # Build'N'Buy
-A game inspired by Minecraft Championship's Build Mart, where you have to replicate mini build and to get the materials for them, you have to go 'shopping'.<br>
+A game inspired by Minecraft Championship(MCC)'s Build Mart, where you have to replicate mini build and to get the materials for them, you have to go 'shopping'.<br>
 Initially made for 2021 Minetest game jam.<br>
 Version: 0.0<br>
 The licenses for all media can be found in the README.md file in the folder that the media is in<br>
