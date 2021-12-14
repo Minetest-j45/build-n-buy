@@ -76,7 +76,7 @@ end
 
 local punching = false
 minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
-    --minetest.chat_send_all("Punched nodepos: "..pos.x.." "..pos.y.." "..pos.z)
+    minetest.chat_send_all("Punched nodepos: "..pos.x.." "..pos.y.." "..pos.z)
     if punching then
         return
     end
@@ -115,6 +115,8 @@ local spawnmin = {x = -5, y = -2, z = -5}
 local spawnmax = {x = 5, y = 8, z = 5}
 local arenamin = {x = -19, y = 100, z = -11}
 local arenamax = {x = 19, y = 109, z = 11}
+local shopmin = {x = -27, y = 300, z = -29}-- -27 300 -29
+local shopmax = {x = 21, y = 300, z = 20}-- 21 325 20
 local mod_storage = minetest.get_mod_storage()--must be called at load time
 minetest.register_on_joinplayer(function(player)
     local placed_already = mod_storage:get_int("placed_already")
@@ -129,6 +131,11 @@ minetest.register_on_joinplayer(function(player)
         minetest.emerge_area(arenamin, arenamax, function(blockpos, action, remaining)
             if remaining == 0 then
                 bnb_schems.place(arenamin, "arena", 0, nil, true)
+            end
+        end)
+        minetest.emerge_area(shopmin, shopmax, function(blockpos, action, remaining)
+            if remaining == 0 then
+                bnb_schems.place(shopmin, "shop", 0, nil, true)
             end
         end)
     end
