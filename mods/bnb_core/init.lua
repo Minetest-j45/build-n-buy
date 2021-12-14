@@ -76,7 +76,7 @@ end
 
 local punching = false
 minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
-    minetest.chat_send_all("Punched nodepos: "..pos.x.." "..pos.y.." "..pos.z)
+    --minetest.chat_send_all("Punched nodepos: "..pos.x.." "..pos.y.." "..pos.z)
     if punching then
         return
     end
