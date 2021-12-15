@@ -5,6 +5,14 @@ bnb_core.building_min = {x = -11, y = 102, z = -3}
 bnb_core.building_max = {x = -5, y = 105, z = 3}
 bnb_core.demo_min = {x = 5, y = 102, z = -3}
 bnb_core.demo_max = { x = 11, y = 105, z = 3}
+bnb_core.spawnmin = {x = -5, y = -2, z = -5}
+bnb_core.spawnmax = {x = 5, y = 8, z = 5}
+bnb_core.arenamin = {x = -19, y = 100, z = -11}
+bnb_core.arenamax = {x = 19, y = 109, z = 11}
+bnb_core.shopmin = {x = -27, y = 300, z = -29}
+bnb_core.shopmax = {x = 21, y = 300, z = 20}
+
+local mod_storage = minetest.get_mod_storage()--must be called at load time
 
 bnb_core.tp_build = function(player)
     player:set_pos(bnb_core.play_pos)
@@ -86,17 +94,13 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
     end)
     if puncher:get_wielded_item().name == "bnb_nodes:stick" then return end
     local node_pos = pointed_thing.under
-    if node_pos.x >= bnb_core.building_min.x and node_pos.x <= bnb_core.building_max.x and node_pos.z >= bnb_core.building_min.z and node_pos.z <= bnb_core.building_max.z then
-        if node_pos.y >= bnb_core.building_min.y and node_pos.y <= bnb_core.building_max.y then
+    if node_pos.x >= bnb_core.building_min.x and node_pos.x <= bnb_core.building_max.x and node_pos.z >= bnb_core.building_min.z and node_pos.z <= bnb_core.building_max.z and node_pos.y >= bnb_core.building_min.y and node_pos.y <= bnb_core.building_max.y then
             --give puncher the node
             local nodename = node.name
             puncher:get_inventory():add_item("main", nodename)
             minetest.set_node(node_pos, {name = "air"})
-        end
-    elseif node_pos.x >= bnb_core.demo_min.x and node_pos.x <= bnb_core.demo_max.x and node_pos.z >= bnb_core.demo_min.z and node_pos.z <= bnb_core.demo_max.z then
-        if node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
+    elseif node_pos.x >= bnb_core.demo_min.x and node_pos.x <= bnb_core.demo_max.x and node_pos.z >= bnb_core.demo_min.z and node_pos.z <= bnb_core.demo_max.z and node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
             minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "This is the demo you need to replicate!"))
-        end
     elseif node.name:find("bnb_nodes:shop_") then
         local selling = node.name:gsub("shop_", "")
         local coins = bnb_coins.get_player_coins(puncher:get_player_name())
@@ -111,31 +115,24 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
     end
 end)
 
-local spawnmin = {x = -5, y = -2, z = -5}
-local spawnmax = {x = 5, y = 8, z = 5}
-local arenamin = {x = -19, y = 100, z = -11}
-local arenamax = {x = 19, y = 109, z = 11}
-local shopmin = {x = -27, y = 300, z = -29}-- -27 300 -29
-local shopmax = {x = 21, y = 300, z = 20}-- 21 325 20
-local mod_storage = minetest.get_mod_storage()--must be called at load time
 minetest.register_on_joinplayer(function(player)
     local placed_already = mod_storage:get_int("placed_already")
     if placed_already == 0 then
         mod_storage:set_int("placed_already", 1)
         --emerge to place schems
-        minetest.emerge_area(spawnmin, spawnmax, function(blockpos, action, remaining)
+        minetest.emerge_area(bnb_core.spawnmin, bnb_core.spawnmax, function(blockpos, action, remaining)
             if remaining == 0 then
-                bnb_schems.place(spawnmin, "spawn", 0, nil, true)
+                bnb_schems.place(bnb_core.spawnmin, "spawn", 0, nil, true)
             end
         end)
-        minetest.emerge_area(arenamin, arenamax, function(blockpos, action, remaining)
+        minetest.emerge_area(bnb_core.arenamin, bnb_core.arenamax, function(blockpos, action, remaining)
             if remaining == 0 then
-                bnb_schems.place(arenamin, "arena", 0, nil, true)
+                bnb_schems.place(bnb_core.arenamin, "arena", 0, nil, true)
             end
         end)
-        minetest.emerge_area(shopmin, shopmax, function(blockpos, action, remaining)
+        minetest.emerge_area(bnb_core.shopmin, bnb_core.shopmax, function(blockpos, action, remaining)
             if remaining == 0 then
-                bnb_schems.place(shopmin, "shop", 0, nil, true)
+                bnb_schems.place(bnb_core.shopmin, "shop", 0, nil, true)
             end
         end)
     end

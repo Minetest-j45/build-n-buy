@@ -451,6 +451,7 @@ for _,sand in ipairs(sands) do
 end
 
 --make it so when you look at a shop, it adds the name of the node it is selling to your hud
+local name
 minetest.register_globalstep(function(dtime)
     for _,player in ipairs(minetest.get_connected_players()) do
 
@@ -464,13 +465,43 @@ minetest.register_globalstep(function(dtime)
         for pointed_thing in ray do
             if pointed_thing.type == "node" then
                 local node = minetest.get_node(pointed_thing.under)
-                if node.name:find("bnb_nodes:shop_") then
-                    local name = node.name:gsub("bnb_nodes:shop_", ""):gsub("_", " ")
+                local node_pos = pointed_thing.under
+                local node_name = node.name
+                if node_name:find("bnb_nodes:shop_") then
+                    name = node_name:gsub("bnb_nodes:shop_", ""):gsub("_", " ")
                     local n = player:hud_add({
                         hud_elem_type = "text",
                         position = {x = 0.1, y = 0.8},
                         offset = {x = 0, y = 0},
                         text = "Selling: "..name,
+                        alignment = {x = 0, y = 0},
+                        scale = {x = 1, y = 1},
+                        number = 0xe6482e,
+                    })
+                    minetest.after(0.1, function()
+                        player:hud_remove(n)
+                    end)
+                elseif node_pos.x >= bnb_core.building_min.x and node_pos.x <= bnb_core.building_max.x and node_pos.z >= bnb_core.building_min.z and node_pos.z <= bnb_core.building_max.z and node_pos.y >= bnb_core.building_min.y and node_pos.y <= bnb_core.building_max.y then
+                    name = node_name:gsub("bnb_nodes:", ""):gsub("_", " ")
+                    local n = player:hud_add({
+                        hud_elem_type = "text",
+                        position = {x = 0.1, y = 0.8},
+                        offset = {x = 0, y = 0},
+                        text = "Building: "..name,
+                        alignment = {x = 0, y = 0},
+                        scale = {x = 1, y = 1},
+                        number = 0xe6482e,
+                    })
+                    minetest.after(0.1, function()
+                        player:hud_remove(n)
+                    end)
+                elseif node_pos.x >= bnb_core.demo_min.x and node_pos.x <= bnb_core.demo_max.x and node_pos.z >= bnb_core.demo_min.z and node_pos.z <= bnb_core.demo_max.z and node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
+                    name = node_name:gsub("bnb_nodes:", ""):gsub("_", " ")
+                    local n = player:hud_add({
+                        hud_elem_type = "text",
+                        position = {x = 0.1, y = 0.8},
+                        offset = {x = 0, y = 0},
+                        text = "Demo: "..name,
                         alignment = {x = 0, y = 0},
                         scale = {x = 1, y = 1},
                         number = 0xe6482e,
