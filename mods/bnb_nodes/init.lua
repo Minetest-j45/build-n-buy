@@ -481,6 +481,7 @@ minetest.register_globalstep(function(dtime)
                     minetest.after(0.1, function()
                         player:hud_remove(n)
                     end)
+                    return
                 elseif node_pos.x >= bnb_core.building_min.x and node_pos.x <= bnb_core.building_max.x and node_pos.z >= bnb_core.building_min.z and node_pos.z <= bnb_core.building_max.z and node_pos.y >= bnb_core.building_min.y and node_pos.y <= bnb_core.building_max.y then
                     name = node_name:gsub("bnb_nodes:", ""):gsub("_", " ")
                     local n = player:hud_add({
@@ -495,6 +496,7 @@ minetest.register_globalstep(function(dtime)
                     minetest.after(0.1, function()
                         player:hud_remove(n)
                     end)
+                    return
                 elseif node_pos.x >= bnb_core.demo_min.x and node_pos.x <= bnb_core.demo_max.x and node_pos.z >= bnb_core.demo_min.z and node_pos.z <= bnb_core.demo_max.z and node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
                     name = node_name:gsub("bnb_nodes:", ""):gsub("_", " ")
                     local n = player:hud_add({
@@ -509,6 +511,7 @@ minetest.register_globalstep(function(dtime)
                     minetest.after(0.1, function()
                         player:hud_remove(n)
                     end)
+                    return
                 end
             end
         end

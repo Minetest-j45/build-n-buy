@@ -21,6 +21,8 @@ end
 bnb_core.start = function(player)
     bnb_core.tp_build(player)
     bnb_coins.add_player_coins(player:get_player_name(), 25)
+    --place schem
+    bnb_schems.place_demo(bnb_core.demo_min)
 end
 
 bnb_core.tp_shop = function(player)
@@ -76,7 +78,9 @@ bnb_core.complete = function(complete, player)
         end
         end
         minetest.chat_send_player(pname, minetest.colorize("#71aa34", "You have completed the building!"))
+        bnb_coins.add_player_coins(pname, 50)
         --place schem for new demo
+        bnb_schems.place_demo(bnb_core.demo_min)
     else
         minetest.chat_send_player(pname, minetest.colorize("#71aa34", "Either your build is not the same as the demo or the demo isnt ready yet. Please try building again or wait for the demo to be ready."))
     end
@@ -174,4 +178,19 @@ minetest.register_on_chat_message(function(name, message)
     local newmsg = minetest.colorize("#b6d53c", "<"..name.."> "..message)
     minetest.chat_send_all(newmsg)
     return newmsg
+end)
+
+--remove crafting and placing in a area that isnt the building area
+minetest.register_on_craft(function(itemstack, player, old_craft_grid, craft_inv)
+	itemstack:set_count(0)
+	return itemstack
+end)
+
+minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
+    if pos.x >= bnb_core.building_min.x and pos.x <= bnb_core.building_max.x and pos.z >= bnb_core.building_min.z and pos.z <= bnb_core.building_max.z and pos.y >= bnb_core.building_min.y and pos.y <= bnb_core.building_max.y then
+        --its fine
+    else
+        minetest.set_node(pos, oldnode)
+        return itemstack
+    end
 end)
