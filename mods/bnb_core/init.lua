@@ -194,3 +194,7 @@ minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack
         return itemstack
     end
 end)
+
+minetest.register_on_newplayer(function(player)
+    player:set_pos({x = 0, y = 0, z = 0})
+end)
