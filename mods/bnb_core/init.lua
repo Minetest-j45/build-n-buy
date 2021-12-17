@@ -162,17 +162,6 @@ minetest.register_item(":", {
     wield_image = "wieldhand.png",
     wield_scale = {x=1,y=1,z=2.5},
 })
---passive income
-local timer = 0
-minetest.register_globalstep(function(dtime)
-    timer = timer + dtime
-    if timer >= 10 then
-        timer = 0
-        for _, player in ipairs(minetest.get_connected_players()) do
-            bnb_coins.add_player_coins(player:get_player_name(), 1)
-        end
-    end
-end)
 
 minetest.register_on_chat_message(function(name, message)
     local newmsg = minetest.colorize("#b6d53c", "<"..name.."> "..message)
@@ -197,4 +186,65 @@ end)
 
 minetest.register_on_newplayer(function(player)
     player:set_pos({x = 0, y = 0, z = 0})
+end)
+
+local round = function(int)
+    return math.floor(int*10)/10--1 dp
+end
+
+local round_pos = function(table)
+    table.x = round(table.x)
+    table.y = round(table.y)
+    table.z = round(table.z)
+    return table
+end
+
+local afkdectector = 0
+local cachepos = {}
+local afk = {}
+minetest.register_globalstep(function(dtime)
+    afkdectector = afkdectector + dtime
+    if afkdectector >= 130 then
+        afkdectector = 0
+        for _,player in ipairs(minetest.get_connected_players()) do
+            local ppos = round_pos(player:get_pos())
+            local pname = player:get_player_name()
+            if cachepos[pname] and ppos.x == cachepos[pname].x and ppos.y == cachepos[pname].y and ppos.z == cachepos[pname].z then
+                minetest.chat_send_all(minetest.colorize("#b6d53c", pname.." is AFK"))
+                afk[pname] = true
+            else
+                afk[pname] = false
+            end
+            cachepos[pname] = ppos
+        end
+    end
+end)
+
+minetest.register_on_leaveplayer(function(player)
+    local pname = player:get_player_name()
+    cachepos[pname] = nil
+    if afk[pname] then
+        afk[pname] = nil
+    end
+end)
+minetest.register_on_joinplayer(function(player)
+    local pname = player:get_player_name()
+    cachepos[pname] = round_pos(player:get_pos())
+end)
+
+--passive income
+local timer = 0
+minetest.register_globalstep(function(dtime)
+    timer = timer + dtime
+    if timer >= 10 then
+        timer = 0
+        for _, player in ipairs(minetest.get_connected_players()) do
+            local pname = player:get_player_name()
+            if afk[pname] then
+                minetest.chat_send_player(player:get_player_name(), minetest.colorize("#71aa34", "You are AFK, you will not receive coins from passive income!"))
+            else
+                bnb_coins.add_player_coins(player:get_player_name(), 1)
+            end
+        end
+    end
 end)
