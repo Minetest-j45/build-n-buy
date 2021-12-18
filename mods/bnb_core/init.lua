@@ -20,7 +20,7 @@ end
 
 bnb_core.start = function(player)
     bnb_core.tp_build(player)
-    bnb_coins.add_player_coins(player:get_player_name(), 25)
+    bnb_coins.add_player_coins(player:get_player_name(), 50)
     --place schem
     bnb_schems.place_demo(bnb_core.demo_min)
 end
@@ -58,7 +58,6 @@ end
 bnb_core.complete = function(complete, player)
     local pname = player:get_player_name()
     if complete then
-        bnb_coins.add_player_coins(pname, 50)
         --set demo area and building area to air
         for x = bnb_core.demo_min.x, bnb_core.demo_max.x do
         for y = bnb_core.demo_min.y, bnb_core.demo_max.y do

@@ -10,7 +10,7 @@ bnb_schems.demos = {
     "camp",
     "lilly",
     "fire",
-    "pokemon",
+    "pokeball",
     "yinyang",
     "cave",
     "present",
@@ -25,6 +25,7 @@ bnb_schems.demos = {
 }
 bnb_schems.last_demo = ""
 bnb_schems.random_demo = function()
+    math.randomseed(os.time())
     local random = math.random(1, #bnb_schems.demos)
     local demo = bnb_schems.demos[random]
     if demo == bnb_schems.last_demo then
