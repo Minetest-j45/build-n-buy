@@ -8,3 +8,4 @@ Screenshot License: CC-BY-SA 4.0 (made by me, j45)<br>
 ## Warnings
 Dont build a mirror of the demo, build it as if you were moving it to the side.<br>
 If you dont like the music, there is a mute button in minetest for a reason.<br>
+You have the fly priveledge so it is easier for you to build, use it!<br>
