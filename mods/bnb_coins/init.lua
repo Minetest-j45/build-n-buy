@@ -58,10 +58,3 @@ minetest.register_globalstep(function(dtime)
         end
     end
 end)
---for dev only
-minetest.register_chatcommand("scoins", {
-    description = "Set your coins",
-    func = function(name, amount)
-        bnb_coins.set_player_coins(name, amount)
-    end
-})

@@ -1,13 +1,3 @@
---stick that sets pointed_thing to air, for development purposes
-minetest.register_craftitem("bnb_nodes:stick", {
-    description = "Stick",
-    on_use = function(itemstack, user, pointed_thing)
-        if pointed_thing.type == "node" then
-            minetest.set_node(pointed_thing.under, {name="air"})
-        end
-    end
-})
-
 --quartz
 minetest.register_node(minetest.get_current_modname()..":quartz_block", {
     description = "Quartz Block",
@@ -162,11 +152,6 @@ minetest.register_node(minetest.get_current_modname()..":light_block", {
     tiles = {"light.png"},
     light_source = 14,
 })
-
---[[minetest.register_node(minetest.get_current_modname()..":stone_block", {
-    description = "Stone Block",
-    tiles = {"stone.png"},
-})]]
 
 --funcs
 local register_ore = function(name, desc)
@@ -330,9 +315,7 @@ local register_shop = function(item, desc, overlay, extra)
     end
     minetest.register_node(minetest.get_current_modname()..":shop_"..item, {
         description = desc,
-        --tiles = {"[combine:32x32:0,0=(blue_wool.png^shopping_cart.png):11,13=red_wool.png\\^[resize\\:10x10"},
         tiles = {"blue_wool.png", "blue_wool.png", "[combine:128x128:0,0=(blue_wool.png^shopping_cart.png\\^[resize\\:128x128):48,56="..overlay.."\\^[resize\\:32x32"..extra},
-        --groups = {shop = 1},
         light_source = 1,
     })
 end
