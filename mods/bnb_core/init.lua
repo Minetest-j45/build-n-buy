@@ -77,18 +77,17 @@ bnb_core.complete = function(complete, player)
         end
         end
         end
-        minetest.chat_send_player(pname, minetest.colorize("#71aa34", "You have completed the building!"))
+        minetest.chat_send_all(minetest.colorize("#71aa34", "You have completed the building!"))
         bnb_coins.add_player_coins(pname, 50)
         --place schem for new demo
         bnb_schems.place_demo(bnb_core.demo_min)
     else
-        minetest.chat_send_player(pname, minetest.colorize("#71aa34", "Either your build is not the same as the demo or the demo isnt ready yet. Please try building again or wait for the demo to be ready."))
+        minetest.chat_send_all(minetest.colorize("#71aa34", "Either the build is not the same as the demo or the demo isnt ready yet. Please try building again or wait for the demo to be ready."))
     end
 end
 
 local punching = false
 minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
-    --minetest.chat_send_all("Punched nodepos: "..pos.x.." "..pos.y.." "..pos.z)
     if punching then
         return
     end
