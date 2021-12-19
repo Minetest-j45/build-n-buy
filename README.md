@@ -9,3 +9,5 @@ Screenshot License: CC-BY-SA 4.0 (made by me, j45)<br>
 Dont build a mirror of the demo, build it as if you were moving it to the side.<br>
 If you dont like the music, there is a mute button in minetest for a reason.<br>
 You have the fly priveledge so it is easier for you to build, use it!<br>
+If you accidentally misplace a block in the building area(the only location you can place blocks), click on the block and you will get it back in your inventory.<br>
+Making more than one trip to the shop for a build is ok.<br>

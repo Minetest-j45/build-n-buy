@@ -36,8 +36,12 @@ bnb_schems.random_demo = function()
     end
 end
 
-bnb_schems.place_demo = function(pos)
+bnb_schems.place_demo = function(minpos, maxpos)
     local demo = bnb_schems.random_demo()
-    bnb_schems.place(pos, "demo_"..demo, 0, nil, true)
-    minetest.chat_send_all(minetest.colorize("#71aa34", "You now have to build a "..demo.."!"))
+    minetest.emerge_area(minpos, maxpos, function(blockpos, action, remaining)
+        if remaining == 0 then
+            bnb_schems.place(minpos, "demo_"..demo, 0, nil, true)
+            minetest.chat_send_all(minetest.colorize("#71aa34", "You now have to build a "..demo.."!"))
+        end
+    end)
 end

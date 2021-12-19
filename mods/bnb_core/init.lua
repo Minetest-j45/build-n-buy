@@ -22,7 +22,7 @@ bnb_core.start = function(player)
     bnb_core.tp_build(player)
     bnb_coins.add_player_coins(player:get_player_name(), 50)
     --place schem
-    bnb_schems.place_demo(bnb_core.demo_min)
+    bnb_schems.place_demo(bnb_core.demo_min, bnb_core.demo_max)
 end
 
 bnb_core.tp_shop = function(player)
@@ -79,7 +79,7 @@ bnb_core.complete = function(complete, player)
         minetest.chat_send_all(minetest.colorize("#71aa34", "You have completed the building!"))
         bnb_coins.add_player_coins(pname, 50)
         --place schem for new demo
-        bnb_schems.place_demo(bnb_core.demo_min)
+        bnb_schems.place_demo(bnb_core.demo_min, bnb_core.demo_max)
     else
         minetest.chat_send_all(minetest.colorize("#71aa34", "Either the build is not the same as the demo or the demo isnt ready yet. Please try building again or wait for the demo to be ready."))
     end
