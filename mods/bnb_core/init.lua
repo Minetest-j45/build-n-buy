@@ -151,6 +151,8 @@ minetest.register_on_joinplayer(function(player)
         textures = {"bob_skin.png"},
     })
     minetest.sound_play("bg_music", {to_player = player:get_player_name(), gain = 0.6, loop = true})
+    --incase ppl have modified minetest.confs
+    minetest.set_player_privs(player:get_player_name(), {fly = true, shout = true, interact = true})
 end)
 
 
