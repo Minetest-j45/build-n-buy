@@ -117,6 +117,10 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
     end
 end)
 
+minetest.register_on_mapgen_init(function(mgparams)
+	minetest.set_mapgen_params({mgname = "singlenode", water_level = -32000})
+end)
+
 minetest.register_on_joinplayer(function(player)
     local placed_already = mod_storage:get_int("placed_already")
     if placed_already == 0 then
