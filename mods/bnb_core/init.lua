@@ -20,15 +20,15 @@ bnb_core.tp_build = function(player)
     player:set_pos(bnb_core.play_pos)
 end
 
+bnb_core.tp_shop = function(player)
+    player:set_pos(bnb_core.shop_pos)
+end
+
 bnb_core.start = function(player)
     bnb_core.tp_build(player)
     bnb_coins.add_player_coins(player:get_player_name(), 50)
     --place schem
     bnb_schems.place_demo(bnb_core.demo_min, bnb_core.demo_max)
-end
-
-bnb_core.tp_shop = function(player)
-    player:set_pos(bnb_core.shop_pos)
 end
 
 bnb_core.set_areas_air = function ()
@@ -289,3 +289,51 @@ minetest.register_globalstep(function(dtime)
         end
     end
 end)
+
+--chat commands to tp to shop/arena/submit a build
+
+minetest.register_chatcommand("shop", {
+    description = "Teleport to the shop",
+    func = function(name)
+        local player = minetest.get_player_by_name(name)
+        bnb_core.tp_shop(player)
+    end
+})
+minetest.register_chatcommand("s", {
+    description = "Teleport to the shop",
+    func = function(name)
+        local player = minetest.get_player_by_name(name)
+        bnb_core.tp_shop(player)
+    end
+})
+
+minetest.register_chatcommand("arena", {
+    description = "Teleport to the arena",
+    func = function(name)
+        local player = minetest.get_player_by_name(name)
+        bnb_core.tp_build(player)
+    end
+})
+minetest.register_chatcommand("a", {
+    description = "Teleport to the arena",
+    func = function(name)
+        local player = minetest.get_player_by_name(name)
+        bnb_core.tp_build(player)
+    end
+})
+
+minetest.register_chatcommand("submit", {
+    description = "Submit your build",
+    func = function(name)
+        local player = minetest.get_player_by_name(name)
+        bnb_core.finished(player)
+    end
+})
+
+minetest.register_chatcommand("s", {
+    description = "Submit your build",
+    func = function(name)
+        local player = minetest.get_player_by_name(name)
+        bnb_core.finished(player)
+    end
+})
