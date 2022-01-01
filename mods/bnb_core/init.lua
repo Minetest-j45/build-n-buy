@@ -194,6 +194,7 @@ minetest.register_on_joinplayer(function(player)
     player:set_physics_override({
         speed = 1.5,
     })
+    player:set_armor_groups({immortal = 1})--make player immortal cuz apparently enable_damage = false sometimes doesnt work
 end)
 
 
