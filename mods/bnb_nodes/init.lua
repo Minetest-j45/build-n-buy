@@ -133,8 +133,9 @@ minetest.register_node(minetest.get_current_modname()..":quartz_finished", {
     description = "Quartz Finished",
     tiles = {"quartz_block.png^finished_text.png"},
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-        local complete = bnb_core.finished()
-        bnb_core.complete(complete, player)
+        --local complete = bnb_core.finished()
+        --bnb_core.complete(complete, player)
+        bnb_core.finished(player)
     end
 })
 
@@ -441,7 +442,7 @@ minetest.register_globalstep(function(dtime)
         local pos = player:get_pos()
         pos.y = pos.y + player:get_properties().eye_height
         local look_dir = player:get_look_dir()
-        look_dir = vector.multiply(look_dir, 4)
+        look_dir = vector.multiply(look_dir, 6)--make distance bigger cuz wuzzy comaplained
         local pos2 = vector.add(pos, look_dir)
         local ray = minetest.raycast(pos, pos2, false, false)
         if not ray then return end
