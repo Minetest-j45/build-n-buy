@@ -123,36 +123,6 @@ bnb_core.finished = function(player)
     end
 end
 
---[[bnb_core.complete = function(complete, player)
-    local pname = player:get_player_name()
-    if complete then
-        --set demo area and building area to air
-        for x = bnb_core.demo_min.x, bnb_core.demo_max.x do
-        for y = bnb_core.demo_min.y, bnb_core.demo_max.y do
-        for z = bnb_core.demo_min.z, bnb_core.demo_max.z do
-            local pos = {x = x, y = y, z = z}
-            minetest.set_node(pos, {name = "air"})
-        end
-        end
-        end
-
-        for x = bnb_core.building_min.x, bnb_core.building_max.x do
-        for y = bnb_core.building_min.y, bnb_core.building_max.y do
-        for z = bnb_core.building_min.z, bnb_core.building_max.z do
-            local pos = {x = x, y = y, z = z}
-            minetest.set_node(pos, {name = "air"})
-        end
-        end
-        end
-        minetest.chat_send_all(minetest.colorize("#71aa34", "You have completed the building!"))
-        bnb_coins.add_player_coins(pname, 50)
-        --place schem for new demo
-        bnb_schems.place_demo(bnb_core.demo_min, bnb_core.demo_max)
-    else
-        minetest.chat_send_all(minetest.colorize("#71aa34", "Either the build is not the same as the demo or the demo isnt ready yet. Please try building again or wait for the demo to be ready."))
-    end
-end]]--move all to bnb_core.finished()
-
 local punching = false
 minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
     if punching then
