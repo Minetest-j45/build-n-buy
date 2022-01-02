@@ -212,6 +212,7 @@ local register_glass = function(name, desc, extra)
         use_texture_alpha = "blend",
         tiles = {name .. "_wool.png^[opacity:210".. extra},
         light_source = 1,
+        paramtype = "light",--suggested by wuzzy
     })
 end
 
