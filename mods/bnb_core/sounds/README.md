@@ -1,1 +1,1 @@
-I(j45) did not make the music in this folder but it is under the CC0 license and can be found at https://pixabay.com/music/search/mood/?movement=fast&genre=upbeat.
+I(j45) did not make the music in this folder but it is under the pixabay license(https://pixabay.com/service/license/) and can be found at https://pixabay.com/music/search/mood/?movement=fast&genre=upbeat.
