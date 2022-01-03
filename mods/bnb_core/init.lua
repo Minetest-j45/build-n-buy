@@ -200,11 +200,7 @@ minetest.register_on_joinplayer(function(player)
         speed = 1.5,
     })
     player:set_armor_groups({immortal = 1})--make player immortal cuz apparently enable_damage = false sometimes doesnt work
-    --player:set_inventory_formspec("size[8,4]list[current_player;main;0,0;8,4;]")
     player:set_inventory_formspec("size[8,4.25]list[current_player;main;0,0;8,1;]list[current_player;main;0,1.5;8,4.25;8]")
-    
-	--player:set_inventory_formspec("size[]list[current_player;main;0,4.5;9,3;9]"..
-	--"list[current_player;main;0,7.74;9,1;]")
 end)
 
 
