@@ -23,14 +23,16 @@ bnb_schems.demos = {
     "clash",
     "stash"
 }
+
+bnb_schems.last_last_demo = ""
 bnb_schems.last_demo = ""
 bnb_schems.random_demo = function()
-    math.randomseed(os.time())
     local random = math.random(1, #bnb_schems.demos)
     local demo = bnb_schems.demos[random]
-    if demo == bnb_schems.last_demo then
+    if demo == bnb_schems.last_demo or demo == bnb_schems.last_last_demo then
         return bnb_schems.random_demo()
     else
+        bnb_schems.last_last_demo = bnb_schems.last_demo
         bnb_schems.last_demo = demo
         return demo
     end
