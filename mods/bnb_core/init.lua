@@ -13,7 +13,8 @@ bnb_core.shopmin = {x = -27, y = 300, z = -29}
 bnb_core.shopmax = {x = 21, y = 300, z = 20}
 
 local mod_storage = minetest.get_mod_storage()--must be called at load time
-
+local modpath = minetest.get_modpath(minetest.get_current_modname())
+dofile(modpath.."/time.lua")
 
 
 bnb_core.tp_build = function(player)
@@ -29,6 +30,7 @@ bnb_core.start = function(player)
     bnb_coins.add_player_coins(player:get_player_name(), 50)
     --place schem
     bnb_schems.place_demo(bnb_core.demo_min, bnb_core.demo_max)
+    bnb_core.reset_time(player)
 end
 
 bnb_core.set_areas_air = function ()
@@ -111,9 +113,12 @@ bnb_core.finished = function(player)
         bnb_core.set_areas_air()
 
         --give player coins and send chat message
+        local time = bnb_core.get_time(player)
+        bnb_core.reset_time(player)
+
         local reward = 50--implement calculation with time
         bnb_coins.add_player_coins(player:get_player_name(), reward)
-        minetest.chat_send_all(minetest.colorize("#71aa34", "You have completed the building! Well done, for doing this, you receive " .. reward .. " coins!"))
+        minetest.chat_send_all(minetest.colorize("#71aa34", "You have completed the building in "..time.." seconds! Well done, for doing this, you receive " .. reward .. " coins!"))
 
 
         --place demo schem
@@ -195,6 +200,11 @@ minetest.register_on_joinplayer(function(player)
         speed = 1.5,
     })
     player:set_armor_groups({immortal = 1})--make player immortal cuz apparently enable_damage = false sometimes doesnt work
+    --player:set_inventory_formspec("size[8,4]list[current_player;main;0,0;8,4;]")
+    player:set_inventory_formspec("size[8,4.25]list[current_player;main;0,0;8,1;]list[current_player;main;0,1.5;8,4.25;8]")
+    
+	--player:set_inventory_formspec("size[]list[current_player;main;0,4.5;9,3;9]"..
+	--"list[current_player;main;0,7.74;9,1;]")
 end)
 
 
