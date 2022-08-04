@@ -161,8 +161,13 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
         local selling = node.name:gsub("shop_", "")
         local coins = bnb_coins.get_player_coins(puncher:get_player_name())
         if coins >= BLOCK_COST then
-            bnb_coins.remove_player_coins(puncher:get_player_name(), BLOCK_COST)
-            puncher:get_inventory():add_item("main", selling)
+            local inv = puncher:get_inventory()
+            if inv:room_for_item("main", selling) then
+               bnb_coins.remove_player_coins(puncher:get_player_name(), BLOCK_COST)
+               inv:add_item("main", selling)
+            else
+               minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "Your inventory is full!"))
+            end
         else
             minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "You don't have enough coins!"))
         end
