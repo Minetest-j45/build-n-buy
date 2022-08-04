@@ -169,10 +169,13 @@ local register_stone = function(name, desc)
     })
 end
 
-local register_liquid = function(name, desc)
+local register_liquid = function(name, desc, animlength)
     minetest.register_node(minetest.get_current_modname()..":"..name, {
         description = desc,
-        tiles = {name..".png"},
+        tiles = {{
+           name = name .. "_animated.png",
+           animation = { type = "vertical_frames", aspect_w = 16, aspect_h = 16, length = animlength },
+        }},
     })
 end
 
@@ -402,13 +405,13 @@ for _,stone in ipairs(stones) do
 end
 
 local liquids = {
-    {"water", "Water"},
-    {"river_water", "River Water"},
-    {"lava", "Lava"},
+    {"water", "Water", 2},
+    {"river_water", "River Water", 2},
+    {"lava", "Lava", 1},
 }
 
 for _,liquid in ipairs(liquids) do
-    register_liquid(liquid[1], liquid[2])
+    register_liquid(liquid[1], liquid[2], liquid[3])
     register_shop(liquid[1], liquid[2].." Shop", liquid[1]..".png")
 end
 
