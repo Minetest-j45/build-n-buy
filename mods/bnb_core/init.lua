@@ -178,7 +178,7 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
             minetest.set_node(node_pos, {name = "air"})
     elseif node_pos.x >= bnb_core.demo_min.x and node_pos.x <= bnb_core.demo_max.x and node_pos.z >= bnb_core.demo_min.z and node_pos.z <= bnb_core.demo_max.z and node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
             minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "This is the demo you need to replicate!"))
-    elseif node.name:find("bnb_nodes:shop_") then
+    elseif minetest.get_item_group(node.name, "shop") == 1 then
         local shopdef = minetest.registered_nodes[node.name]
         local selling = shopdef._bnb_selling
         local coins = bnb_coins.get_player_coins(puncher:get_player_name())

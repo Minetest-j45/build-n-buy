@@ -262,6 +262,7 @@ local register_shop = function(item, desc, overlay, extra)
         description = desc,
         tiles = {"blue_wool.png", "blue_wool.png", "[combine:128x128:0,0=(blue_wool.png^shopping_cart.png\\^[resize\\:128x128):48,56="..overlay.."\\^[resize\\:32x32"..extra},
         light_source = 1,
+        groups = { shop = 1 },
         -- Store which item this shop is selling
         _bnb_selling = minetest.get_current_modname()..":"..item,
     })
@@ -419,7 +420,7 @@ minetest.register_globalstep(function(dtime)
                 local node_pos = pointed_thing.under
                 local node_name = node.name
                 -- Hovering a shop
-                if node_name:find("bnb_nodes:shop_") then
+                if minetest.get_item_group(node_name, "shop") == 1 then
                     local shopdef = minetest.registered_nodes[node_name]
                     local selling = shopdef._bnb_selling
                     local iname = bnb_core.item_readable(selling)
