@@ -20,6 +20,14 @@ local mod_storage = minetest.get_mod_storage()--must be called at load time
 local modpath = minetest.get_modpath(minetest.get_current_modname())
 dofile(modpath.."/time.lua")
 
+local item_readable = function(itemstring)
+   if minetest.registered_items[itemstring] then
+      local stack = ItemStack(itemstring)
+      return stack:get_short_description()
+   else
+      return itemstring
+   end
+end
 
 bnb_core.tp_build = function(player)
     player:set_pos(bnb_core.play_pos)
@@ -70,7 +78,7 @@ bnb_core.finished = function(player)
         local node_demo = minetest.get_node(pos_demo)
         if node.name ~= node_demo.name then
             if same then--only send one msg for each type at a time
-                minetest.chat_send_all(minetest.colorize("#71aa34", "If you are building an exact clone: the node at " .. minetest.pos_to_string(pos) .. " is " .. node.name .. " but should be " .. node_demo.name))
+                minetest.chat_send_all(minetest.colorize("#71aa34", "If you are building an exact clone: The block at " .. minetest.pos_to_string(pos) .. " is " .. item_readable(node.name) .. " but should be " .. item_readable(node_demo.name).."."))
             end
             same = false
         end
@@ -105,7 +113,7 @@ bnb_core.finished = function(player)
             local node_demo = minetest.get_node(pos_demo)
             if node.name ~= node_demo.name then
                 if mirror_same then
-                    minetest.chat_send_all(minetest.colorize("#71aa34", "If you are building a mirror: the node at " .. minetest.pos_to_string(pos) .. " is " .. node.name .. " but should be " .. node_demo.name))
+                    minetest.chat_send_all(minetest.colorize("#71aa34", "If you are building a mirror: The node at " .. minetest.pos_to_string(pos) .. " is " .. item_readable(node.name) .. " but should be " .. item_readable(node_demo.name).."."))
                 end
                 mirror_same = false
             end
