@@ -6,6 +6,7 @@ bnb_schems.place = function(pos, schemname, rot, replace, force_place)
 end
 
 bnb_schems.demos = {
+    -- originals
     "tree",
     "camp",
     "lilly",
@@ -21,7 +22,53 @@ bnb_schems.demos = {
     "flower",
     "moon",
     "clash",
-    "stash"
+    "stash",
+    -- by Wuzzy
+    "castle",
+    "cloud",
+    "clearing",
+    "containment",
+    "furnace",
+    "lava_crater",
+    "mese_shrine",
+    "orange",
+    "portal",
+    "ritual",
+    "sign",
+    "wasteland",
+    "well",
+    "ruin",
+    "sewer",
+    "lab_leak",
+    "staircase",
+    "beach",
+    "bling_bling",
+    "bling_floor",
+    "coal_vein",
+    "cursed_lava",
+    "cursed_sand",
+    "desert_statue",
+    "dirt_hut",
+    "wood_hut",
+    "lava_flow",
+    "mese_monument",
+    "mese_vein",
+    "M",
+    "oasis",
+    "snowland",
+    "spring",
+    "stone_circle",
+    "traffic_lights",
+    "pipe",
+    "sheep",
+    "snowmelt",
+    "drizzle",
+    "rain",
+    "puddle",
+    "mosaic_window",
+    "collapsed_cave",
+    "island",
+    "crystal",
 }
 
 bnb_schems.last_last_demo = ""
@@ -43,7 +90,9 @@ bnb_schems.place_demo = function(minpos, maxpos)
     minetest.emerge_area(minpos, maxpos, function(blockpos, action, remaining)
         if remaining == 0 then
             bnb_schems.place(minpos, "demo_"..demo, 0, nil, true)
-            minetest.chat_send_all(minetest.colorize("#71aa34", "You now have to build a "..demo.."!"))
+            -- replace underscores with spaces for chat msg
+            local print_name = string.gsub(demo, "_", " ")
+            minetest.chat_send_all(minetest.colorize("#71aa34", "You now have to build a "..print_name.."!"))
         end
     end)
 end
