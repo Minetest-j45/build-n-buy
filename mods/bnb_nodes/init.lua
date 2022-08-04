@@ -154,12 +154,27 @@ minetest.register_node(minetest.get_current_modname()..":light_block", {
     light_source = 14,
 })
 
+-- Blocks for the shop signs. They are based on the building
+-- blocks, but glow slightly.
+local register_sign_block = function(name)
+    local nodename = minetest.get_current_modname()..":"..name
+    local orig = minetest.registered_nodes[nodename]
+    local def = table.copy(orig)
+    def.description = def.description.." Sign Block"
+    if not def.light_source or def.light_source < 1 then
+       def.light_source = 1
+    end
+    def.paramtype = "light"
+    minetest.register_node(minetest.get_current_modname()..":sign_block_"..name, def)
+end
+
 --funcs
 local register_ore = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_ore", {
         description = desc.." Ore",
         tiles = {"stone.png^"..name.."_ore.png"},
     })
+    register_sign_block(name.."_ore")
 end
 
 local register_stone = function(name, desc)
@@ -167,6 +182,7 @@ local register_stone = function(name, desc)
         description = desc.." Stone",
         tiles = {name..".png"},
     })
+    register_sign_block(name)
 end
 
 local register_liquid = function(name, desc)
@@ -174,6 +190,7 @@ local register_liquid = function(name, desc)
         description = desc,
         tiles = {name..".png"},
     })
+    register_sign_block(name)
 end
 
 local register_dirt = function(name, desc, texture)
@@ -181,6 +198,7 @@ local register_dirt = function(name, desc, texture)
         description = desc,
         tiles = texture,
     })
+    register_sign_block(name)
 end
 
 local register_sand = function(name, desc)
@@ -188,6 +206,7 @@ local register_sand = function(name, desc)
         description = desc,
         tiles = {name..".png"},
     })
+    register_sign_block(name)
 end
 
 local register_block = function(name, desc)
@@ -195,6 +214,7 @@ local register_block = function(name, desc)
         description = desc .. " Block",
         tiles = {name.."_block.png"},
     })
+    register_sign_block(name.."_block")
 end
 
 local register_wool = function(name, desc)
@@ -203,6 +223,7 @@ local register_wool = function(name, desc)
         tiles = {name .. "_wool.png"},
         light_source = 1,
     })
+    register_sign_block(name.."_wool")
 end
 
 local register_glass = function(name, desc, extra)
@@ -214,6 +235,7 @@ local register_glass = function(name, desc, extra)
         light_source = 1,
         paramtype = "light",--suggested by wuzzy
     })
+    register_sign_block(name.."_stained_glass")
 end
 
 --logs
@@ -222,15 +244,17 @@ local register_log = function(name, desc)
         description = desc.." Log",
         tiles = {"log_"..name.."_top.png", "log_"..name.."_top.png", "log_"..name..".png"}
     })
+    register_sign_block(name.."_log")
 end
 local register_plank = function (name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_plank", {
         description = desc.." Plank",
         tiles = {name.."_plank.png"}
     })
+    register_sign_block(name.."_plank")
 end
 
---signs
+--signs (wallmounted blocks with a single letter A-Z)
 local register_sign = function(name, desc, tilez)
     minetest.register_node(minetest.get_current_modname()..":sign_"..name, {
         description = desc,
