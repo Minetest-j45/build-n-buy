@@ -12,6 +12,10 @@ bnb_core.arenamax = {x = 19, y = 109, z = 11}
 bnb_core.shopmin = {x = -27, y = 300, z = -29}
 bnb_core.shopmax = {x = 21, y = 300, z = 20}
 
+local REWARD = 50 -- reward for completing a building
+local PASSIVE_INCOME_TIMER = 10 -- give 1 free coin after this number of seconds
+local BLOCK_COST = 1 -- cost of 1 block
+
 local mod_storage = minetest.get_mod_storage()--must be called at load time
 local modpath = minetest.get_modpath(minetest.get_current_modname())
 dofile(modpath.."/time.lua")
@@ -27,7 +31,7 @@ end
 
 bnb_core.start = function(player)
     bnb_core.tp_build(player)
-    bnb_coins.add_player_coins(player:get_player_name(), 50)
+    bnb_coins.add_player_coins(player:get_player_name(), REWARD)
     --place schem
     bnb_schems.place_demo(bnb_core.demo_min, bnb_core.demo_max)
     bnb_core.reset_time(player)
@@ -123,7 +127,7 @@ bnb_core.finished = function(player)
         local time = bnb_core.get_time(player)
         bnb_core.reset_time(player)
 
-        local reward = 50--implement calculation with time
+        local reward = REWARD --implement calculation with time
         bnb_coins.add_player_coins(player:get_player_name(), reward)
         minetest.chat_send_all(minetest.colorize("#71aa34", "You have completed the building in "..time.." seconds! Well done, for doing this, you receive " .. reward .. " coins!"))
 
@@ -156,8 +160,8 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
     elseif node.name:find("bnb_nodes:shop_") then
         local selling = node.name:gsub("shop_", "")
         local coins = bnb_coins.get_player_coins(puncher:get_player_name())
-        if coins >= 1 then
-            bnb_coins.remove_player_coins(puncher:get_player_name(), 1)
+        if coins >= BLOCK_COST then
+            bnb_coins.remove_player_coins(puncher:get_player_name(), BLOCK_COST)
             puncher:get_inventory():add_item("main", selling)
         else
             minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "You don't have enough coins!"))
@@ -293,7 +297,7 @@ end)
 local timer = 0
 minetest.register_globalstep(function(dtime)
     timer = timer + dtime
-    if timer >= 10 then
+    if timer >= PASSIVE_INCOME_TIMER then
         timer = 0
         for _, player in ipairs(minetest.get_connected_players()) do
             local pname = player:get_player_name()
