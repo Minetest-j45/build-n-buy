@@ -410,7 +410,9 @@ minetest.register_globalstep(function(dtime)
 	local pname = player:get_player_name()
         pos.y = pos.y + player:get_properties().eye_height
         local look_dir = player:get_look_dir()
-        look_dir = vector.multiply(look_dir, 6)--make distance bigger cuz wuzzy comaplained
+        local handdef = minetest.registered_items[""]
+        local range = handdef.range or 4
+        look_dir = vector.multiply(look_dir, range) --adjust distance to hand range
         local pos2 = vector.add(pos, look_dir)
         local ray = minetest.raycast(pos, pos2, false, false)
         if not ray then return end
@@ -451,6 +453,8 @@ minetest.register_globalstep(function(dtime)
                     return
                 end
             end
+	    -- Only care about the first node in the ray
+	    break
         end
         -- Remove hover text if nothing pointed
         if nothing_pointed then
