@@ -1,5 +1,12 @@
 bnb_coins = {}
 
+local update_coins_hud = function(player)
+   local name = player:get_player_name()
+   local coins = tostring(bnb_coins.get_player_coins(name))
+   player:hud_change(0, "text", "Coins: " .. coins)
+   player:hud_change(1, "offset", {x = (#coins * 4.2)+46, y = 0})
+end
+
 bnb_coins.get_player_coins = function(name)
     local player = minetest.get_player_by_name(name)
     local meta = player:get_meta()
@@ -11,14 +18,19 @@ bnb_coins.set_player_coins = function(name, amount)
     local player = minetest.get_player_by_name(name)
     local meta = player:get_meta()
     local coins = meta:set_int("coins", amount)
+    update_coins_hud(player)
 end
 
 bnb_coins.add_player_coins = function(name, amount)
     bnb_coins.set_player_coins(name, bnb_coins.get_player_coins(name) + amount)
+    local player = minetest.get_player_by_name(name)
+    update_coins_hud(player)
 end
 
 bnb_coins.remove_player_coins = function(name, amount)
     bnb_coins.set_player_coins(name, bnb_coins.get_player_coins(name) - amount)
+    local player = minetest.get_player_by_name(name)
+    update_coins_hud(player)
 end
 
 --HUD things
@@ -51,10 +63,7 @@ minetest.register_globalstep(function(dtime)
     if time >= 1 then
         time = 0
         for _, player in ipairs(minetest.get_connected_players()) do
-            local name = player:get_player_name()
-            local coins = tostring(bnb_coins.get_player_coins(name))
-            player:hud_change(0, "text", "Coins: " .. coins)
-            player:hud_change(1, "offset", {x = (#coins * 4.2)+46, y = 0})
+            update_coins_hud(player)
         end
     end
 end)
