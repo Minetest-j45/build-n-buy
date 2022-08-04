@@ -31,10 +31,12 @@ end
 
 bnb_core.tp_build = function(player)
     player:set_pos(bnb_core.play_pos)
+    bnb_core.not_afk(player)
 end
 
 bnb_core.tp_shop = function(player)
     player:set_pos(bnb_core.shop_pos)
+    bnb_core.not_afk(player)
 end
 
 bnb_core.start = function(player)
@@ -162,6 +164,7 @@ end
 
 local punching = false
 minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
+    bnb_core.not_afk(puncher)
     if punching then
         return
     end
@@ -254,6 +257,8 @@ minetest.register_item(":", {
 minetest.register_on_chat_message(function(name, message)
     local newmsg = minetest.colorize("#b6d53c", "<"..name.."> "..message)
     minetest.chat_send_all(newmsg)
+    local player = minetest.get_player_by_name(name)
+    bnb_core.not_afk(player)
     return newmsg
 end)
 
@@ -264,6 +269,7 @@ minetest.register_on_craft(function(itemstack, player, old_craft_grid, craft_inv
 end)
 
 minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
+    bnb_core.not_afk(placer)
     if pos.x >= bnb_core.building_min.x and pos.x <= bnb_core.building_max.x and pos.z >= bnb_core.building_min.z and pos.z <= bnb_core.building_max.z and pos.y >= bnb_core.building_min.y and pos.y <= bnb_core.building_max.y then
         --its fine
     else
@@ -306,6 +312,16 @@ minetest.register_globalstep(function(dtime)
             cachepos[pname] = ppos
         end
     end
+end)
+
+bnb_core.not_afk = function(player)
+    local pname = player:get_player_name()
+    afk[pname] = false
+    cachepos[pname] = player:get_pos()
+end
+minetest.register_on_chatcommand(function(pname)
+    local player = minetest.get_player_by_name(pname)
+    bnb_core.not_afk(player)
 end)
 
 minetest.register_on_leaveplayer(function(player)
