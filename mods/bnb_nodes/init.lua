@@ -1,7 +1,15 @@
+local node_sounds = {
+   footstep = { name = "bnb_core_step", gain = 0.8 },
+   place = { name = "bnb_core_place", gain = 1.0 },
+   dig = { name = "bnb_core_dig", gain = 1.0 },
+   dug = { name = "bnb_core_dig", gain = 1.0 },
+}
+
 --quartz
 minetest.register_node(minetest.get_current_modname()..":quartz_block", {
     description = "Quartz Block",
     tiles = {"quartz_block.png"},
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_slab", {
@@ -12,6 +20,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_slab", {
         type = "fixed",
         fixed = {-0.5, -0.5, -0.5, 0.5, 0, 0.5},
     },
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_slab1", {
@@ -22,6 +31,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_slab1", {
         type = "fixed",
         fixed = {-0.5, 0, -0.5, 0.5, 0.5, 0.5},
     },
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_pillar", {
@@ -34,6 +44,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_pillar", {
             {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25},
         },
     },
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_wall1", {
@@ -46,6 +57,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_wall1", {
             {-0.5, -0.5, -0.25, 0.5, 0.5, 0.25},
         },
     },
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_wall2", {
@@ -58,6 +70,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_wall2", {
             {-0.25, -0.5, -0.5, 0.25, 0.5, 0.5},
         },
     },
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_wall3_1", {
@@ -70,6 +83,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_wall3_1", {
             {0, -0.5, -0.5, 0.5, 0.5, 0.5},
         },
     },
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_wall3_2", {
@@ -82,6 +96,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_wall3_2", {
             {-0.5, -0.5, -0.5, 0, 0.5, 0.5},
         },
     },
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_wall4_1", {
@@ -94,6 +109,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_wall4_1", {
             {-0.5, -0.5, 0, 0.5, 0.5, 0.5},
         },
     },
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_wall4_2", {
@@ -106,11 +122,13 @@ minetest.register_node(minetest.get_current_modname()..":quartz_wall4_2", {
             {-0.5, -0.5, -0.5, 0.5, 0.5, 0},
         },
     },
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_welcome", {
     description = "Quartz Welcome",
     tiles = {"quartz_block.png^welcome_text.png"},
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_play", {
@@ -118,7 +136,8 @@ minetest.register_node(minetest.get_current_modname()..":quartz_play", {
     tiles = {"quartz_block.png^play_text.png"},
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
         bnb_core.start(player)
-    end
+    end,
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_shop", {
@@ -126,7 +145,8 @@ minetest.register_node(minetest.get_current_modname()..":quartz_shop", {
     tiles = {"quartz_block.png^shop_text.png"},
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
         bnb_core.tp_shop(player)
-    end
+    end,
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_finished", {
@@ -136,7 +156,8 @@ minetest.register_node(minetest.get_current_modname()..":quartz_finished", {
         --local complete = bnb_core.finished()
         --bnb_core.complete(complete, player)
         bnb_core.finished(player)
-    end
+    end,
+    sounds = node_sounds,
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_build", {
@@ -144,7 +165,8 @@ minetest.register_node(minetest.get_current_modname()..":quartz_build", {
     tiles = {"quartz_block.png^build_text.png"},
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
         bnb_core.tp_build(player)
-    end
+    end,
+    sounds = node_sounds,
 })
 
 --lantern
@@ -152,6 +174,7 @@ minetest.register_node(minetest.get_current_modname()..":light_block", {
     description = "Light Block",
     tiles = {"light.png"},
     light_source = 14,
+    sounds = node_sounds,
 })
 
 --funcs
@@ -159,6 +182,7 @@ local register_ore = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_ore", {
         description = desc.." Ore",
         tiles = {"stone.png^"..name.."_ore.png"},
+        sounds = node_sounds,
     })
 end
 
@@ -166,6 +190,7 @@ local register_stone = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name, {
         description = desc.." Stone",
         tiles = {name..".png"},
+        sounds = node_sounds,
     })
 end
 
@@ -173,6 +198,7 @@ local register_liquid = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name, {
         description = desc,
         tiles = {name..".png"},
+        sounds = node_sounds,
     })
 end
 
@@ -180,6 +206,7 @@ local register_dirt = function(name, desc, texture)
     minetest.register_node(minetest.get_current_modname()..":"..name, {
         description = desc,
         tiles = texture,
+        sounds = node_sounds,
     })
 end
 
@@ -187,6 +214,7 @@ local register_sand = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name, {
         description = desc,
         tiles = {name..".png"},
+        sounds = node_sounds,
     })
 end
 
@@ -194,6 +222,7 @@ local register_block = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_block", {
         description = desc,
         tiles = {name.."_block.png"},
+        sounds = node_sounds,
     })
 end
 
@@ -202,6 +231,7 @@ local register_wool = function(name, desc)
         description = desc.." Wool",
         tiles = {name .. "_wool.png"},
         light_source = 1,
+        sounds = node_sounds,
     })
 end
 
@@ -213,6 +243,7 @@ local register_glass = function(name, desc, extra)
         tiles = {name .. "_wool.png^[opacity:210".. extra},
         light_source = 1,
         paramtype = "light",--suggested by wuzzy
+        sounds = node_sounds,
     })
 end
 
@@ -220,13 +251,15 @@ end
 local register_log = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_log", {
         description = desc.." Log",
-        tiles = {"log_"..name.."_top.png", "log_"..name.."_top.png", "log_"..name..".png"}
+        tiles = {"log_"..name.."_top.png", "log_"..name.."_top.png", "log_"..name..".png"},
+        sounds = node_sounds,
     })
 end
 local register_plank = function (name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_plank", {
         description = desc.." Plank",
-        tiles = {name.."_plank.png"}
+        tiles = {name.."_plank.png"},
+        sounds = node_sounds,
     })
 end
 
@@ -237,6 +270,7 @@ local register_sign = function(name, desc, tilez)
         description = desc,
         tiles = tilez,
         light_source = 1,
+        sounds = node_sounds,
     })
 end
 
@@ -319,6 +353,7 @@ local register_shop = function(item, desc, overlay, extra)
         description = desc,
         tiles = {"blue_wool.png", "blue_wool.png", "[combine:128x128:0,0=(blue_wool.png^shopping_cart.png\\^[resize\\:128x128):48,56="..overlay.."\\^[resize\\:32x32"..extra},
         light_source = 1,
+        sounds = node_sounds,
     })
 end
 
