@@ -378,12 +378,33 @@ for _,sand in ipairs(sands) do
     register_shop(sand[1], sand[2].." Shop", sand[1]..".png")
 end
 
+-- Initalize the HUD element for the text when
+-- hovering a shop or demo/building block
+local hover_hud_ids = {}
+minetest.register_on_joinplayer(function(player)
+   local name = player:get_player_name()
+   local n = player:hud_add({
+      hud_elem_type = "text",
+      position = {x = 0.05, y = 0.8},
+      offset = {x = 0, y = 0},
+      text = "",
+      alignment = {x = 1, y = 0},
+      scale = {x = 1, y = 1},
+      number = 0xffffffff,
+   })
+   hover_hud_ids[name] = n
+end)
+minetest.register_on_leaveplayer(function(player)
+   local name = player:get_player_name()
+   hover_hud_ids[name] = nil
+end)
+
 --make it so when you look at a shop, it adds the name of the node it is selling to your hud
-local name
 minetest.register_globalstep(function(dtime)
     for _,player in ipairs(minetest.get_connected_players()) do
 
         local pos = player:get_pos()
+	local pname = player:get_player_name()
         pos.y = pos.y + player:get_properties().eye_height
         local look_dir = player:get_look_dir()
         look_dir = vector.multiply(look_dir, 6)--make distance bigger cuz wuzzy comaplained
@@ -395,52 +416,37 @@ minetest.register_globalstep(function(dtime)
                 local node = minetest.get_node(pointed_thing.under)
                 local node_pos = pointed_thing.under
                 local node_name = node.name
+                -- Hovering a shop
                 if node_name:find("bnb_nodes:shop_") then
-                    local name = bnb_core.item_readable(node_name)
-                    local n = player:hud_add({
-                        hud_elem_type = "text",
-                        position = {x = 0.1, y = 0.8},
-                        offset = {x = 0, y = 0},
-                        text = "Selling: "..name,
-                        alignment = {x = 0, y = 0},
-                        scale = {x = 1, y = 1},
-                        number = 0x4162e8,
-                    })
-                    minetest.after(0.1, function()
-                        player:hud_remove(n)
-                    end)
+                    local iname = bnb_core.item_readable(node_name)
+                    if hover_hud_ids[pname] then
+                        player:hud_change(hover_hud_ids[pname], "text", "Selling: "..iname)
+                        player:hud_change(hover_hud_ids[pname], "number", 0xffe44b)
+                    end
                     return
+                -- Hovering a block in the building zone
                 elseif node_pos.x >= bnb_core.building_min.x and node_pos.x <= bnb_core.building_max.x and node_pos.z >= bnb_core.building_min.z and node_pos.z <= bnb_core.building_max.z and node_pos.y >= bnb_core.building_min.y and node_pos.y <= bnb_core.building_max.y then
-                    local name = bnb_core.item_readable(node_name)
-                    local n = player:hud_add({
-                        hud_elem_type = "text",
-                        position = {x = 0.1, y = 0.8},
-                        offset = {x = 0, y = 0},
-                        text = "Building: "..name,
-                        alignment = {x = 0, y = 0},
-                        scale = {x = 1, y = 1},
-                        number = 0xe6482e,
-                    })
-                    minetest.after(0.1, function()
-                        player:hud_remove(n)
-                    end)
+                    local iname = bnb_core.item_readable(node_name)
+                    if hover_hud_ids[pname] then
+                        player:hud_change(hover_hud_ids[pname], "text", "Building: "..iname)
+                        player:hud_change(hover_hud_ids[pname], "number", 0xe6482e)
+                    end
                     return
+                -- Hovering a block in the demo zone
                 elseif node_pos.x >= bnb_core.demo_min.x and node_pos.x <= bnb_core.demo_max.x and node_pos.z >= bnb_core.demo_min.z and node_pos.z <= bnb_core.demo_max.z and node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
-                    local name = bnb_core.item_readable(node_name)
-                    local n = player:hud_add({
-                        hud_elem_type = "text",
-                        position = {x = 0.1, y = 0.8},
-                        offset = {x = 0, y = 0},
-                        text = "Demo: "..name,
-                        alignment = {x = 0, y = 0},
-                        scale = {x = 1, y = 1},
-                        number = 0x4162e8,
-                    })
-                    minetest.after(0.1, function()
-                        player:hud_remove(n)
-                    end)
+                    local iname = bnb_core.item_readable(node_name)
+                    if hover_hud_ids[pname] then
+                        player:hud_change(hover_hud_ids[pname], "text", "Demo: "..iname)
+                        player:hud_change(hover_hud_ids[pname], "number", 0x4162e8)
+                    end
                     return
-                end
+                -- Hovering none of the above
+	        else
+                    -- Remove hover text
+                    if hover_hud_ids[pname] then
+                        player:hud_change(hover_hud_ids[pname], "text", "")
+		    end
+	        end
             end
         end
     end
