@@ -1,4 +1,5 @@
-# bnb_core
-Core stuff for Build'N'Buy<br>
-Code License: MIT<br>
-author = j45
+# `bnb_core`
+Core stuff for Build'N'Buy
+Code License: MIT
+Sound license: See sounds folder
+authors = j45, Wuzzy

@@ -31,10 +31,12 @@ end
 
 bnb_core.tp_build = function(player)
     player:set_pos(bnb_core.play_pos)
+    minetest.sound_play({name="bnb_core_teleport"}, {pos=player:get_pos()}, true)
 end
 
 bnb_core.tp_shop = function(player)
     player:set_pos(bnb_core.shop_pos)
+    minetest.sound_play({name="bnb_core_teleport"}, {pos=player:get_pos()}, true)
 end
 
 bnb_core.start = function(player)
@@ -151,12 +153,13 @@ bnb_core.finished = function(player)
         local reward = REWARD --implement calculation with time
         bnb_coins.add_player_coins(player:get_player_name(), reward)
         minetest.chat_send_all(minetest.colorize("#71aa34", "You have completed the building in "..time.." seconds! Well done, for doing this, you receive " .. reward .. " coins!"))
-
+        minetest.sound_play({name="bnb_core_submit_win"}, {to_player=player:get_player_name()}, true)
 
         --place demo schem
         bnb_schems.place_demo(bnb_core.demo_min, bnb_core.demo_max)
     else
         --minetest.chat_send_all(minetest.colorize("#71aa34", fail_msg))
+        minetest.sound_play({name="bnb_core_submit_fail"}, {to_player=player:get_player_name()}, true)
     end
 end
 
@@ -176,6 +179,7 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
             local nodename = node.name
             puncher:get_inventory():add_item("main", nodename)
             minetest.set_node(node_pos, {name = "air"})
+            minetest.sound_play({name="bnb_core_dig"}, {pos=node_pos}, true)
     elseif node_pos.x >= bnb_core.demo_min.x and node_pos.x <= bnb_core.demo_max.x and node_pos.z >= bnb_core.demo_min.z and node_pos.z <= bnb_core.demo_max.z and node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
             minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "This is the demo you need to replicate!"))
     elseif minetest.get_item_group(node.name, "shop") == 1 then
@@ -187,11 +191,14 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
             if inv:room_for_item("main", selling) then
                bnb_coins.remove_player_coins(puncher:get_player_name(), BLOCK_COST)
                inv:add_item("main", selling)
+               minetest.sound_play({name="bnb_core_buy"}, {pos=puncher:get_pos()}, true)
             else
                minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "Your inventory is full!"))
+               minetest.sound_play({name="bnb_core_buy_fail"}, {to_player=puncher:get_player_name()}, true)
             end
         else
             minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "You don't have enough coins!"))
+            minetest.sound_play({name="bnb_core_buy_fail"}, {to_player=puncher:get_player_name()}, true)
         end
     else
         return false
@@ -233,7 +240,7 @@ minetest.register_on_joinplayer(function(player)
         eye_height = 1.47,
         textures = {"bob_skin.png"},
     })
-    minetest.sound_play("bg_music", {to_player = player:get_player_name(), gain = 0.6, loop = true})
+    minetest.sound_play("bnb_core_bg_music", {to_player = player:get_player_name(), gain = 0.6, loop = true}, true)
     --incase ppl have modified minetest.confs
     minetest.set_player_privs(player:get_player_name(), {fly = true, shout = true, interact = true})
     player:set_physics_override({
