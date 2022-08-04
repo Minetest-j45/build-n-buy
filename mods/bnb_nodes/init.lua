@@ -293,7 +293,7 @@ for i=0, 25 do
    local letter = string.char(i + 0x61)
    local letter_capital = string.char(i + 0x41)
 
-   register_sign(letter, letter_capital.." Sign", {"font_"..letter..".png"})
+   register_sign(letter, letter_capital.." Sign", {"font_"..letter..".png", "blank.png"})
 end
 
 --shops
