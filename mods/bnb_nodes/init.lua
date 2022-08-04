@@ -418,7 +418,7 @@ minetest.register_globalstep(function(dtime)
                 local node_name = node.name
                 -- Hovering a shop
                 if node_name:find("bnb_nodes:shop_") then
-                    local iname = bnb_core.item_readable(node_name)
+                    local iname = node_name:gsub("bnb_nodes:shop_", ""):gsub("_", " ")
                     if hover_hud_ids[pname] then
                         player:hud_change(hover_hud_ids[pname], "text", "Selling: "..iname)
                         player:hud_change(hover_hud_ids[pname], "number", 0xffe44b)
