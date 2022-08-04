@@ -414,6 +414,7 @@ minetest.register_globalstep(function(dtime)
         local pos2 = vector.add(pos, look_dir)
         local ray = minetest.raycast(pos, pos2, false, false)
         if not ray then return end
+        local nothing_pointed = true
         for pointed_thing in ray do
             if pointed_thing.type == "node" then
                 local node = minetest.get_node(pointed_thing.under)
@@ -427,6 +428,7 @@ minetest.register_globalstep(function(dtime)
                     if hover_hud_ids[pname] then
                         player:hud_change(hover_hud_ids[pname], "text", "Selling: "..iname)
                         player:hud_change(hover_hud_ids[pname], "number", 0xffe44b)
+                        nothing_pointed = false
                     end
                     return
                 -- Hovering a block in the building zone
@@ -435,6 +437,7 @@ minetest.register_globalstep(function(dtime)
                     if hover_hud_ids[pname] then
                         player:hud_change(hover_hud_ids[pname], "text", "Building: "..iname)
                         player:hud_change(hover_hud_ids[pname], "number", 0xe6482e)
+                        nothing_pointed = false
                     end
                     return
                 -- Hovering a block in the demo zone
@@ -443,16 +446,15 @@ minetest.register_globalstep(function(dtime)
                     if hover_hud_ids[pname] then
                         player:hud_change(hover_hud_ids[pname], "text", "Demo: "..iname)
                         player:hud_change(hover_hud_ids[pname], "number", 0x4162e8)
+                        nothing_pointed = false
                     end
                     return
-                -- Hovering none of the above
-	        else
-                    -- Remove hover text
-                    if hover_hud_ids[pname] then
-                        player:hud_change(hover_hud_ids[pname], "text", "")
-		    end
-	        end
+                end
             end
+        end
+        -- Remove hover text if nothing pointed
+        if nothing_pointed then
+            player:hud_change(hover_hud_ids[pname], "text", "")
         end
     end
 end)
