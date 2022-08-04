@@ -65,6 +65,19 @@ bnb_core.set_areas_air = function ()
     end
 end
 
+local function wrong_node_message(pos, is_node, should_node, prefix)
+    local msg
+    if is_node.name == "air" then
+        msg = "There's no block at " .. minetest.pos_to_string(pos) .. " but it should be " .. item_readable(should_node.name).."."
+    elseif should_node.name == "air" then
+        msg = "The block at " .. minetest.pos_to_string(pos) .. " is " .. item_readable(is_node.name) .. " but should be removed."
+    else
+        msg = "The block at " .. minetest.pos_to_string(pos) .. " is " .. item_readable(is_node.name) .. " but should be " .. item_readable(should_node.name).."."
+    end
+    msg = prefix .. msg
+    minetest.chat_send_all(minetest.colorize("#71aa34", msg))
+end
+
 bnb_core.finished = function(player)
     local same = true
     local all_air = true
@@ -78,7 +91,7 @@ bnb_core.finished = function(player)
         local node_demo = minetest.get_node(pos_demo)
         if node.name ~= node_demo.name then
             if same then--only send one msg for each type at a time
-                minetest.chat_send_all(minetest.colorize("#71aa34", "If you are building an exact clone: The block at " .. minetest.pos_to_string(pos) .. " is " .. item_readable(node.name) .. " but should be " .. item_readable(node_demo.name).."."))
+                wrong_node_message(pos, node, node_demo, "If you are building an exact clone: ")
             end
             same = false
         end
@@ -113,7 +126,7 @@ bnb_core.finished = function(player)
             local node_demo = minetest.get_node(pos_demo)
             if node.name ~= node_demo.name then
                 if mirror_same then
-                    minetest.chat_send_all(minetest.colorize("#71aa34", "If you are building a mirror: The node at " .. minetest.pos_to_string(pos) .. " is " .. item_readable(node.name) .. " but should be " .. item_readable(node_demo.name).."."))
+                    wrong_node_message(pos, node, node_demo, "If you are building a mirror: ")
                 end
                 mirror_same = false
             end
