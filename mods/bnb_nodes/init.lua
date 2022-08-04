@@ -231,84 +231,27 @@ local register_plank = function (name, desc)
 end
 
 --signs
-
 local register_sign = function(name, desc, tilez)
     minetest.register_node(minetest.get_current_modname()..":sign_"..name, {
         description = desc,
         tiles = tilez,
-        light_source = 1,
+        drawtype = "nodebox",
+        node_box = {
+           type = "wallmounted",
+           wall_side = { -0.5, -0.5, -0.5, -31/64, 0.5, 0.5, },
+        },
+        paramtype2 = "wallmounted",
+        walkable = false,
+        paramtype = "light",
+        sunlight_propagates = true,
     })
 end
+for i=0, 25 do
+   local letter = string.char(i + 0x61)
+   local letter_capital = string.char(i + 0x41)
 
---wool signs
-register_sign("magenta_w", "Magenta W Sign", {"magenta_wool.png", "magenta_wool.png", "magenta_wool.png^font_w.png"})
-register_sign("orange_o", "Orange O Sign", {"orange_wool.png", "orange_wool.png", "orange_wool.png^font_o.png"})
-register_sign("cyan_o", "Cyan O Sign", {"cyan_wool.png", "cyan_wool.png", "cyan_wool.png^font_o.png"})
-register_sign("green_l", "Green L Sign", {"green_wool.png", "green_wool.png", "green_wool.png^font_l.png"})
-
---log signs
-register_sign("pine_w", "Pine W Sign", {"log_pine_top.png", "log_pine_top.png", "log_pine.png^font_w.png"})
-register_sign("oak_o", "Oak O Sign", {"log_oak_top.png", "log_oak_top.png", "log_oak.png^font_o.png"})
-register_sign("beech_o", "Beech O Sign", {"log_beech_top.png", "log_beech_top.png", "log_beech.png^font_o.png"})
-register_sign("teak_d", "Teak D Sign", {"log_teak_top.png", "log_teak_top.png", "log_teak.png^font_d.png"})
-
---signs for planks
-register_sign("pine_plank_p", "Pine Plank P Sign", {"pine_plank.png", "pine_plank.png", "pine_plank.png^font_p.png"})
-register_sign("oak_plank_l", "Oak Plank L Sign", {"oak_plank.png", "oak_plank.png", "oak_plank.png^font_l.png"})
-register_sign("beech_plank_a", "Beech Plank A Sign", {"beech_plank.png", "beech_plank.png", "beech_plank.png^font_a.png"})
-register_sign("teak_plank_n", "Teak Plank N Sign", {"teak_plank.png", "teak_plank.png", "teak_plank.png^font_n.png"})
-register_sign("ash_plank_k", "Ash Plank K Sign", {"ash_plank.png", "ash_plank.png", "ash_plank.png^font_k.png"})
-register_sign("pine_plank_s", "Pine Plank S Sign", {"pine_plank.png", "pine_plank.png", "pine_plank.png^font_s.png"})
-
---wool signs
-register_sign("pink_g", "Pink G Sign", {"pink_wool.png", "pink_wool.png", "pink_wool.png^font_g.png"})
-register_sign("brown_l", "Brown L Sign", {"brown_wool.png", "brown_wool.png", "brown_wool.png^font_l.png"})
-register_sign("red_a", "Red A Sign", {"red_wool.png", "red_wool.png", "red_wool.png^font_a.png"})
-register_sign("magenta_s", "Magenta S Sign", {"magenta_wool.png", "magenta_wool.png", "magenta_wool.png^font_s.png"})
-register_sign("violet_s", "Violet S Sign", {"violet_wool.png", "violet_wool.png", "violet_wool.png^font_s.png"})
-
---ore signs
-register_sign("coal_o", "Coal O Sign", {"stone.png^coal_ore.png", "stone.png^coal_ore.png", "stone.png^coal_ore.png^font_o.png"})
-register_sign("copper_r", "Copper R Sign", {"stone.png^copper_ore.png", "stone.png^copper_ore.png", "stone.png^copper_ore.png^font_r.png"})
-register_sign("mese_e", "Mese E Sign", {"stone.png^mese_ore.png", "stone.png^mese_ore.png", "stone.png^mese_ore.png^font_e.png"})
-register_sign("diamond_s", "Diamond S Sign", {"stone.png^diamond_ore.png", "stone.png^diamond_ore.png", "stone.png^diamond_ore.png^font_s.png"})
-
---blocks signs
-register_sign("coal_b", "Coal B Sign", {"coal_block.png", "coal_block.png", "coal_block.png^font_b.png"})
-register_sign("copper_l", "Copper L Sign", {"copper_block.png", "copper_block.png", "copper_block.png^font_l.png"})
-register_sign("mese_o", "Mese O Sign", {"mese_block.png", "mese_block.png", "mese_block.png^font_o.png"})
-register_sign("diamond_c", "Diamond C Sign", {"diamond_block.png", "diamond_block.png", "diamond_block.png^font_c.png"})
-register_sign("gold_k", "Gold K Sign", {"gold_block.png", "gold_block.png", "gold_block.png^font_k.png"})
-register_sign("iron_s", "Iron S Sign", {"iron_block.png", "iron_block.png", "iron_block.png^font_s.png"})
-
---stones signs
-register_sign("stone_s", "Stone S Sign", {"stone.png", "stone.png", "stone.png^font_s.png"})
-register_sign("polished_stone_t", "Polished Stone T Sign", {"polished_stone.png", "polished_stone.png", "polished_stone.png^font_t.png"})
-register_sign("brick_stone_o", "Brick Stone O Sign", {"brick_stone.png", "brick_stone.png", "brick_stone.png^font_o.png"})
-register_sign("desert_stone_n", "Desert Stone N Sign", {"desert_stone.png", "desert_stone.png", "desert_stone.png^font_n.png"})
-register_sign("polished_desert_stone_e", "Polished Desert Stone E Sign", {"polished_desert_stone.png", "polished_desert_stone.png", "polished_desert_stone.png^font_e.png"})
-register_sign("desert_brick_stone_s", "Desert Brick Stone S Sign", {"desert_brick_stone.png", "desert_brick_stone.png", "desert_brick_stone.png^font_s.png"})
-
---liquids signs
-register_sign("water_f", "Water F Sign", {"water.png", "water.png", "water.png^font_f.png"})
-register_sign("lava_l", "Lava L Sign", {"lava.png", "lava.png", "lava.png^font_l.png"})
-register_sign("river_water_u", "River Water U Sign", {"river_water.png", "river_water.png", "river_water.png^font_u.png"})
-register_sign("lava_i", "Lava I Sign", {"lava.png", "lava.png", "lava.png^font_i.png"})
-register_sign("water_d", "Water D Sign", {"water.png", "water.png", "water.png^font_d.png"})
-register_sign("river_water_s", "River Water S Sign", {"river_water.png", "river_water.png", "river_water.png^font_s.png"})
-
---dirts signs
-register_sign("dirt_d", "Dirt D Sign", {"dirt.png", "dirt.png", "dirt.png^font_d.png"})
-register_sign("dirt_with_grass_i", "Dirt With Grass I Sign", {"grass.png", "dirt.png", "dirt.png^grass_side.png^font_i.png"})
-register_sign("dirt_with_snow_r", "Dirt With Snow R Sign", {"snow.png", "dirt.png", "dirt.png^snow_side.png^font_r.png"})
-register_sign("dry_dirt_with_dry_grass_t", "Dry Dirt With Dry Grass T Sign", {"dry_grass.png", "dry_dirt.png", "dry_dirt.png^dry_grass_side.png^font_t.png"})
-register_sign("dry_dirt_s", "Dry Dirt S Sign", {"dry_dirt.png", "dry_dirt.png", "dry_dirt.png^font_s.png"})
-
---sand signs
-register_sign("sand_s", "Sand S Sign", {"sand.png", "sand.png", "sand.png^font_s.png"})
-register_sign("silver_sand_a", "Silver Sand A Sign", {"silver_sand.png", "silver_sand.png", "silver_sand.png^font_a.png"})
-register_sign("sand_n", "Sand N Sign", {"sand.png", "sand.png", "sand.png^font_n.png"})
-register_sign("silver_sand_d", "Silver Sand D Sign", {"silver_sand.png", "silver_sand.png", "silver_sand.png^font_d.png"})
+   register_sign(letter, letter_capital.." Sign", {"font_"..letter..".png"})
+end
 
 --shops
 local register_shop = function(item, desc, overlay, extra)
