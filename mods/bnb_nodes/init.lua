@@ -396,7 +396,7 @@ minetest.register_globalstep(function(dtime)
                 local node_pos = pointed_thing.under
                 local node_name = node.name
                 if node_name:find("bnb_nodes:shop_") then
-                    name = node_name:gsub("bnb_nodes:shop_", ""):gsub("_", " ")
+                    local name = bnb_core.item_readable(node_name)
                     local n = player:hud_add({
                         hud_elem_type = "text",
                         position = {x = 0.1, y = 0.8},
@@ -404,14 +404,14 @@ minetest.register_globalstep(function(dtime)
                         text = "Selling: "..name,
                         alignment = {x = 0, y = 0},
                         scale = {x = 1, y = 1},
-                        number = 0xe6482e,
+                        number = 0x4162e8,
                     })
                     minetest.after(0.1, function()
                         player:hud_remove(n)
                     end)
                     return
                 elseif node_pos.x >= bnb_core.building_min.x and node_pos.x <= bnb_core.building_max.x and node_pos.z >= bnb_core.building_min.z and node_pos.z <= bnb_core.building_max.z and node_pos.y >= bnb_core.building_min.y and node_pos.y <= bnb_core.building_max.y then
-                    name = node_name:gsub("bnb_nodes:", ""):gsub("_", " ")
+                    local name = bnb_core.item_readable(node_name)
                     local n = player:hud_add({
                         hud_elem_type = "text",
                         position = {x = 0.1, y = 0.8},
@@ -426,7 +426,7 @@ minetest.register_globalstep(function(dtime)
                     end)
                     return
                 elseif node_pos.x >= bnb_core.demo_min.x and node_pos.x <= bnb_core.demo_max.x and node_pos.z >= bnb_core.demo_min.z and node_pos.z <= bnb_core.demo_max.z and node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
-                    name = node_name:gsub("bnb_nodes:", ""):gsub("_", " ")
+                    local name = bnb_core.item_readable(node_name)
                     local n = player:hud_add({
                         hud_elem_type = "text",
                         position = {x = 0.1, y = 0.8},
@@ -434,7 +434,7 @@ minetest.register_globalstep(function(dtime)
                         text = "Demo: "..name,
                         alignment = {x = 0, y = 0},
                         scale = {x = 1, y = 1},
-                        number = 0xe6482e,
+                        number = 0x4162e8,
                     })
                     minetest.after(0.1, function()
                         player:hud_remove(n)

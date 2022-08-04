@@ -20,7 +20,7 @@ local mod_storage = minetest.get_mod_storage()--must be called at load time
 local modpath = minetest.get_modpath(minetest.get_current_modname())
 dofile(modpath.."/time.lua")
 
-local item_readable = function(itemstring)
+bnb_core.item_readable = function(itemstring)
    if minetest.registered_items[itemstring] then
       local stack = ItemStack(itemstring)
       return stack:get_short_description()
@@ -68,11 +68,11 @@ end
 local function wrong_node_message(pos, is_node, should_node, prefix)
     local msg
     if is_node.name == "air" then
-        msg = "There's no block at " .. minetest.pos_to_string(pos) .. " but it should be " .. item_readable(should_node.name).."."
+        msg = "There's no block at " .. minetest.pos_to_string(pos) .. " but it should be " .. bnb_core.item_readable(should_node.name).."."
     elseif should_node.name == "air" then
-        msg = "The block at " .. minetest.pos_to_string(pos) .. " is " .. item_readable(is_node.name) .. " but should be removed."
+        msg = "The block at " .. minetest.pos_to_string(pos) .. " is " .. bnb_core.item_readable(is_node.name) .. " but should be removed."
     else
-        msg = "The block at " .. minetest.pos_to_string(pos) .. " is " .. item_readable(is_node.name) .. " but should be " .. item_readable(should_node.name).."."
+        msg = "The block at " .. minetest.pos_to_string(pos) .. " is " .. bnb_core.item_readable(is_node.name) .. " but should be " .. bnb_core.item_readable(should_node.name).."."
     end
     msg = prefix .. msg
     minetest.chat_send_all(minetest.colorize("#71aa34", msg))
