@@ -177,6 +177,20 @@ minetest.register_node(minetest.get_current_modname()..":light_block", {
     sounds = node_sounds,
 })
 
+-- Blocks for the shop signs. They are based on the building
+-- blocks, but glow slightly.
+local register_sign_block = function(name)
+    local nodename = minetest.get_current_modname()..":"..name
+    local orig = minetest.registered_nodes[nodename]
+    local def = table.copy(orig)
+    def.description = def.description.." Sign Block"
+    if not def.light_source or def.light_source < 1 then
+       def.light_source = 1
+    end
+    def.paramtype = "light"
+    minetest.register_node(minetest.get_current_modname()..":sign_block_"..name, def)
+end
+
 --funcs
 local register_ore = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_ore", {
@@ -184,6 +198,7 @@ local register_ore = function(name, desc)
         tiles = {"stone.png^"..name.."_ore.png"},
         sounds = node_sounds,
     })
+    register_sign_block(name.."_ore")
 end
 
 local register_stone = function(name, desc)
@@ -192,6 +207,7 @@ local register_stone = function(name, desc)
         tiles = {name..".png"},
         sounds = node_sounds,
     })
+    register_sign_block(name)
 end
 
 local register_liquid = function(name, desc, animlength, light_level)
@@ -209,6 +225,7 @@ local register_liquid = function(name, desc, animlength, light_level)
 	paramtype = paramtype,
         sounds = node_sounds,
     })
+    register_sign_block(name)
 end
 
 local register_dirt = function(name, desc, texture)
@@ -217,6 +234,7 @@ local register_dirt = function(name, desc, texture)
         tiles = texture,
         sounds = node_sounds,
     })
+    register_sign_block(name)
 end
 
 local register_sand = function(name, desc)
@@ -225,14 +243,16 @@ local register_sand = function(name, desc)
         tiles = {name..".png"},
         sounds = node_sounds,
     })
+    register_sign_block(name)
 end
 
 local register_block = function(name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_block", {
-        description = desc,
+        description = desc .. " Block",
         tiles = {name.."_block.png"},
         sounds = node_sounds,
     })
+    register_sign_block(name.."_block")
 end
 
 local register_wool = function(name, desc)
@@ -242,6 +262,7 @@ local register_wool = function(name, desc)
         light_source = 1,
         sounds = node_sounds,
     })
+    register_sign_block(name.."_wool")
 end
 
 local register_glass = function(name, desc, extra)
@@ -254,6 +275,7 @@ local register_glass = function(name, desc, extra)
         paramtype = "light",--suggested by wuzzy
         sounds = node_sounds,
     })
+    register_sign_block(name.."_stained_glass")
 end
 
 --logs
@@ -263,6 +285,7 @@ local register_log = function(name, desc)
         tiles = {"log_"..name.."_top.png", "log_"..name.."_top.png", "log_"..name..".png"},
         sounds = node_sounds,
     })
+    register_sign_block(name.."_log")
 end
 local register_plank = function (name, desc)
     minetest.register_node(minetest.get_current_modname()..":"..name.."_plank", {
@@ -270,9 +293,10 @@ local register_plank = function (name, desc)
         tiles = {name.."_plank.png"},
         sounds = node_sounds,
     })
+    register_sign_block(name.."_plank")
 end
 
---signs
+--signs (wallmounted blocks with a single letter A-Z)
 local register_sign = function(name, desc, tilez)
     minetest.register_node(minetest.get_current_modname()..":sign_"..name, {
         description = desc,
@@ -333,7 +357,7 @@ local wools = {
 for _, wool in ipairs(wools) do
     --normal wools
     register_wool(wool[1], wool[2])
-    register_shop(wool[1].."_wool", wool[2].."Wool Shop", wool[1].."_wool.png")
+    register_shop(wool[1].."_wool", wool[2].." Wool Shop", wool[1].."_wool.png")
 
     --glasses
     if not wool[3] then
@@ -384,7 +408,7 @@ local stones = {
     {"polished_stone", "Polished"},
     {"desert_stone", "Desert"},
     {"desert_brick_stone", "Desert Brick"},
-    {"polished_desert_stone", "Desert Polished"},
+    {"polished_desert_stone", "Polished Desert"},
 }
 for _,stone in ipairs(stones) do
     register_stone(stone[1], stone[2])
@@ -405,10 +429,10 @@ end
 
 local dirts = {
     {"dirt", "Dirt", {"dirt.png"}},
-    {"dirt_with_grass", "Dirt With Grass", {"grass.png", "dirt.png", "dirt.png^grass_side.png"}},
+    {"dirt_with_grass", "Dirt with Grass", {"grass.png", "dirt.png", "dirt.png^grass_side.png"}},
     {"dry_dirt", "Dry Dirt", {"dry_dirt.png"}},
-    {"dry_dirt_with_dry_grass", "Dry Dirt With Dry Grass", {"dry_grass.png", "dry_dirt.png", "dry_dirt.png^dry_grass_side.png"}},
-    {"dirt_with_snow", "Dirt With Snow", {"snow.png", "dirt.png", "dirt.png^snow_side.png"}},
+    {"dry_dirt_with_dry_grass", "Dry Dirt with dry Grass", {"dry_grass.png", "dry_dirt.png", "dry_dirt.png^dry_grass_side.png"}},
+    {"dirt_with_snow", "Dirt with Snow", {"snow.png", "dirt.png", "dirt.png^snow_side.png"}},
 }
 for _,dirt in ipairs(dirts) do
     register_dirt(dirt[1], dirt[2], dirt[3])
