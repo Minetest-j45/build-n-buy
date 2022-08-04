@@ -276,7 +276,6 @@ end
 local register_sign = function(name, desc, tilez)
     minetest.register_node(minetest.get_current_modname()..":sign_"..name, {
         description = desc,
-        drawtype = drawtype,
         tiles = tilez,
         drawtype = "nodebox",
         node_box = {
