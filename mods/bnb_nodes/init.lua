@@ -110,12 +110,12 @@ minetest.register_node(minetest.get_current_modname()..":quartz_wall4_2", {
 
 minetest.register_node(minetest.get_current_modname()..":quartz_welcome", {
     description = "Quartz Welcome",
-    tiles = {"quartz_block.png^welcome_text.png"},
+    tiles = {"quartz_block.png","quartz_block.png","quartz_block.png^welcome_text.png"},
 })
 
 minetest.register_node(minetest.get_current_modname()..":quartz_play", {
     description = "Quartz Play",
-    tiles = {"quartz_block.png^play_text.png"},
+    tiles = {"quartz_block.png","quartz_block.png","quartz_block.png^play_text.png"},
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
         bnb_core.start(player)
     end
@@ -123,7 +123,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_play", {
 
 minetest.register_node(minetest.get_current_modname()..":quartz_shop", {
     description = "Quartz Shop",
-    tiles = {"quartz_block.png^shop_text.png"},
+    tiles = {"quartz_block.png","quartz_block.png","quartz_block.png^shop_text.png"},
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
         bnb_core.tp_shop(player)
     end
@@ -131,7 +131,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_shop", {
 
 minetest.register_node(minetest.get_current_modname()..":quartz_finished", {
     description = "Quartz Finished",
-    tiles = {"quartz_block.png^finished_text.png"},
+    tiles = {"quartz_block.png","quartz_block.png","quartz_block.png^finished_text.png"},
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
         --local complete = bnb_core.finished()
         --bnb_core.complete(complete, player)
@@ -141,7 +141,7 @@ minetest.register_node(minetest.get_current_modname()..":quartz_finished", {
 
 minetest.register_node(minetest.get_current_modname()..":quartz_build", {
     description = "Quartz Build",
-    tiles = {"quartz_block.png^build_text.png"},
+    tiles = {"quartz_block.png","quartz_block.png","quartz_block.png^build_text.png"},
     on_rightclick = function(pos, node, player, itemstack, pointed_thing)
         bnb_core.tp_build(player)
     end
