@@ -241,11 +241,19 @@ end
 
 --signs
 
-local register_sign = function(name, desc, tilez)
+local register_sign = function(name, desc, tilez, is_glass)
+    local drawtype, use_texture_alpha
+    if is_glass then
+       drawtype = "glasslike"
+       use_texture_alpha = "blend"
+    end
     minetest.register_node(minetest.get_current_modname()..":sign_"..name, {
         description = desc,
+        drawtype = drawtype,
         tiles = tilez,
         light_source = 1,
+        paramtype = "light",
+        use_texture_alpha = use_texture_alpha,
     })
 end
 
@@ -269,12 +277,12 @@ register_sign("teak_plank_n", "Teak Plank N Sign", {"teak_plank.png", "teak_plan
 register_sign("ash_plank_k", "Ash Plank K Sign", {"ash_plank.png", "ash_plank.png", "ash_plank.png^font_k.png"})
 register_sign("pine_plank_s", "Pine Plank S Sign", {"pine_plank.png", "pine_plank.png", "pine_plank.png^font_s.png"})
 
---wool signs
-register_sign("pink_g", "Pink G Sign", {"pink_wool.png", "pink_wool.png", "pink_wool.png^font_g.png"})
-register_sign("brown_l", "Brown L Sign", {"brown_wool.png", "brown_wool.png", "brown_wool.png^font_l.png"})
-register_sign("red_a", "Red A Sign", {"red_wool.png", "red_wool.png", "red_wool.png^font_a.png"})
-register_sign("magenta_s", "Magenta S Sign", {"magenta_wool.png", "magenta_wool.png", "magenta_wool.png^font_s.png"})
-register_sign("violet_s", "Violet S Sign", {"violet_wool.png", "violet_wool.png", "violet_wool.png^font_s.png"})
+--glass signs
+register_sign("pink_g", "Pink G Sign", {"pink_glass.png^font_g.png"}, true)
+register_sign("brown_l", "Brown L Sign", {"brown_glass.png^font_l.png"}, true)
+register_sign("red_a", "Red A Sign", {"red_glass.png^font_a.png"}, true)
+register_sign("magenta_s", "Magenta S Sign", {"magenta_glass.png^font_s.png"}, true)
+register_sign("violet_s", "Violet S Sign", {"violet_glass.png^font_s.png"}, true)
 
 --ore signs
 register_sign("coal_o", "Coal O Sign", {"stone.png^coal_ore.png", "stone.png^coal_ore.png", "stone.png^coal_ore.png^font_o.png"})
