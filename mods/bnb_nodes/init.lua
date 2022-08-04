@@ -219,7 +219,7 @@ local register_glass = function(name, desc, extra)
         description = desc.. " Stained Glass",
         drawtype = "glasslike",
         use_texture_alpha = "blend",
-        tiles = {name .. "_wool.png^[opacity:210".. extra},
+        tiles = {name .. "_glass.png".. extra},
         light_source = 1,
         paramtype = "light",--suggested by wuzzy
     })
@@ -359,7 +359,7 @@ for _, wool in ipairs(wools) do
        wool[3] = ""
     end
     register_glass(wool[1], wool[2], wool[3])
-    register_shop(wool[1].."_stained_glass", wool[2].." Stained Glass Shop", wool[1].."_wool.png", "\\^[opacity\\:210")
+    register_shop(wool[1].."_stained_glass", wool[2].." Stained Glass Shop", wool[1].."_glass.png")
 end
 
 
