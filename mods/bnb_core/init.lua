@@ -56,6 +56,7 @@ end
 bnb_core.finished = function(player)
     local same = true
     local all_air = true
+    local unloaded = false
     for x = bnb_core.building_min.x, bnb_core.building_max.x do
     for y = bnb_core.building_min.y, bnb_core.building_max.y do
     for z = bnb_core.building_min.z, bnb_core.building_max.z do
@@ -72,17 +73,23 @@ bnb_core.finished = function(player)
         if node_demo.name ~= "air" then
             all_air = false
         end
+        if node_demo.name == "ignore" then
+            unloaded = true
+	    break
+        end
     end
     end
     end
 
     local finished
-    if all_air then
+    if all_air or unloaded then
         finished = false
         minetest.chat_send_all(minetest.colorize("#71aa34", "Please wait for the demo to load, thanks for your patience!"))
-    elseif same and all_air == false then
+        minetest.load_area(bnb_core.demo_min, bnb_core.demo_max)
+        minetest.load_area(bnb_core.building_min, bnb_core.building_max)
+    elseif same and all_air == false and unloaded == false then
         finished = true
-    elseif same == false and all_air == false then
+    elseif same == false and all_air == false and unloaded == false then
         --check for mirrors
         local mirror_same = true
         for x = bnb_core.building_min.x, bnb_core.building_max.x do
@@ -181,6 +188,8 @@ minetest.register_on_joinplayer(function(player)
             end
         end)
     end
+    minetest.load_area(bnb_core.demo_min, bnb_core.demo_max)
+    minetest.load_area(bnb_core.building_min, bnb_core.building_max)
 
     player:hud_set_hotbar_image("gui_hotbar.png")
     player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
