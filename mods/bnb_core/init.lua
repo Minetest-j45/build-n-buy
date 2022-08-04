@@ -89,18 +89,18 @@ bnb_core.finished = function(player)
         local node = minetest.get_node(pos)
         local pos_demo = {x = x+16, y = y, z = z}
         local node_demo = minetest.get_node(pos_demo)
-        if node.name ~= node_demo.name then
-            if same then--only send one msg for each type at a time
-                wrong_node_message(pos, node, node_demo, "If you are building an exact clone: ")
-            end
-            same = false
-        end
         if node_demo.name ~= "air" then
             all_air = false
         end
         if node_demo.name == "ignore" then
             unloaded = true
-	    break
+            break
+        end
+        if node.name ~= node_demo.name then
+            if same then--only send one msg for each type at a time
+                wrong_node_message(pos, node, node_demo, "If you are building an exact clone: ")
+            end
+            same = false
         end
     end
     end
