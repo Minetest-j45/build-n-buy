@@ -169,10 +169,19 @@ local register_stone = function(name, desc)
     })
 end
 
-local register_liquid = function(name, desc)
+local register_liquid = function(name, desc, animlength, light_level)
+	local paramtype
+    if light_level and light_level > 1 then
+        paramtype = "light"
+    end
     minetest.register_node(minetest.get_current_modname()..":"..name, {
         description = desc,
-        tiles = {name..".png"},
+        tiles = {{
+           name = name .. "_animated.png",
+           animation = { type = "vertical_frames", aspect_w = 16, aspect_h = 16, length = animlength },
+        }},
+	light_source = light_level,
+	paramtype = paramtype,
     })
 end
 
@@ -210,7 +219,7 @@ local register_glass = function(name, desc, extra)
         description = desc.. " Stained Glass",
         drawtype = "glasslike",
         use_texture_alpha = "blend",
-        tiles = {name .. "_wool.png^[opacity:210".. extra},
+        tiles = {name .. "_glass.png".. extra},
         light_source = 1,
         paramtype = "light",--suggested by wuzzy
     })
@@ -234,6 +243,7 @@ end
 local register_sign = function(name, desc, tilez)
     minetest.register_node(minetest.get_current_modname()..":sign_"..name, {
         description = desc,
+        drawtype = drawtype,
         tiles = tilez,
         drawtype = "nodebox",
         node_box = {
@@ -296,7 +306,7 @@ for _, wool in ipairs(wools) do
        wool[3] = ""
     end
     register_glass(wool[1], wool[2], wool[3])
-    register_shop(wool[1].."_stained_glass", wool[2].." Stained Glass Shop", wool[1].."_wool.png", "\\^[opacity\\:210")
+    register_shop(wool[1].."_stained_glass", wool[2].." Stained Glass Shop", wool[1].."_glass.png")
 end
 
 
@@ -348,13 +358,13 @@ for _,stone in ipairs(stones) do
 end
 
 local liquids = {
-    {"water", "Water"},
-    {"river_water", "River Water"},
-    {"lava", "Lava"},
+    {"water", "Water", 2},
+    {"river_water", "River Water", 2},
+    {"lava", "Lava", 1, 14},
 }
 
 for _,liquid in ipairs(liquids) do
-    register_liquid(liquid[1], liquid[2])
+    register_liquid(liquid[1], liquid[2], liquid[3], liquid[4])
     register_shop(liquid[1], liquid[2].." Shop", liquid[1]..".png")
 end
 
