@@ -169,13 +169,19 @@ local register_stone = function(name, desc)
     })
 end
 
-local register_liquid = function(name, desc, animlength)
+local register_liquid = function(name, desc, animlength, light_level)
+	local paramtype
+    if light_level and light_level > 1 then
+        paramtype = "light"
+    end
     minetest.register_node(minetest.get_current_modname()..":"..name, {
         description = desc,
         tiles = {{
            name = name .. "_animated.png",
            animation = { type = "vertical_frames", aspect_w = 16, aspect_h = 16, length = animlength },
         }},
+	light_source = light_level,
+	paramtype = paramtype,
     })
 end
 
@@ -407,11 +413,11 @@ end
 local liquids = {
     {"water", "Water", 2},
     {"river_water", "River Water", 2},
-    {"lava", "Lava", 1},
+    {"lava", "Lava", 1, 14},
 }
 
 for _,liquid in ipairs(liquids) do
-    register_liquid(liquid[1], liquid[2], liquid[3])
+    register_liquid(liquid[1], liquid[2], liquid[3], liquid[4])
     register_shop(liquid[1], liquid[2].." Shop", liquid[1]..".png")
 end
 
