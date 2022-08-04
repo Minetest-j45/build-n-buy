@@ -10,7 +10,7 @@ bnb_core.spawnmax = {x = 5, y = 8, z = 5}
 bnb_core.arenamin = {x = -19, y = 100, z = -11}
 bnb_core.arenamax = {x = 19, y = 109, z = 11}
 bnb_core.shopmin = {x = -27, y = 300, z = -29}
-bnb_core.shopmax = {x = 21, y = 300, z = 20}
+bnb_core.shopmax = {x = 21, y = 325, z = 20}
 
 local REWARD = 50 -- reward for completing a building
 local PASSIVE_INCOME_TIMER = 10 -- give 1 free coin after this number of seconds
