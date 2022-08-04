@@ -1,10 +1,18 @@
 bnb_coins = {}
 
+local hud_ids_coins_txt = {}
+local hud_ids_coins_ico = {}
+
 local update_coins_hud = function(player)
    local name = player:get_player_name()
    local coins = tostring(bnb_coins.get_player_coins(name))
-   player:hud_change(0, "text", "Coins: " .. coins)
-   player:hud_change(1, "offset", {x = (#coins * 4.2)+46, y = 0})
+   local id_txt = hud_ids_coins_txt[name]
+   local id_ico = hud_ids_coins_ico[name]
+   if not id_txt or not id_ico then
+      return
+   end
+   player:hud_change(id_txt, "text", "Coins: " .. coins)
+   player:hud_change(id_ico, "offset", {x = (#coins * 4.2)+46, y = 0})
 end
 
 bnb_coins.get_player_coins = function(name)
@@ -37,7 +45,7 @@ end
 minetest.register_on_joinplayer(function(player)
     local name = player:get_player_name()
     local coins = tostring(bnb_coins.get_player_coins(name))
-    player:hud_add({
+    local id_txt = player:hud_add({
         hud_elem_type = "text",
         position = {x = 0.1, y = 0.9},
         offset = {x = 0, y = 0},
@@ -46,7 +54,7 @@ minetest.register_on_joinplayer(function(player)
         alignment = {x = 0, y = 0},
         --scale = {x = 350, y = 350},
     })
-    player:hud_add({
+    local id_ico = player:hud_add({
         hud_elem_type = "image",
         position = {x = 0.1, y = 0.9},
         offset = {x = (#coins * 4.2)+46, y = 0},
@@ -55,6 +63,14 @@ minetest.register_on_joinplayer(function(player)
         alignment = {x = 0, y = 0},
         scale = {x = 2, y = 2},
     })
+    hud_ids_coins_txt[name] = id_txt
+    hud_ids_coins_ico[name] = id_ico
+end)
+
+minetest.register_on_leaveplayer(function(player)
+    local name = player:get_player_name()
+    hud_ids_coins_txt[name] = nil
+    hud_ids_coins_ico[name] = nil
 end)
 
 local time = 0
