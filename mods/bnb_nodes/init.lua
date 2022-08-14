@@ -311,6 +311,7 @@ local register_sign = function(name, desc, tilez)
         paramtype = "light",
         sunlight_propagates = true,
         sounds = node_sounds,
+        use_texture_alpha = "clip",
     })
 end
 for i=0, 25 do
