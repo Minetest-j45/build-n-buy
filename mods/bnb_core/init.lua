@@ -79,13 +79,14 @@ local function wrong_node_message(pos, is_node, should_node, prefix)
         msg = "The block at " .. minetest.pos_to_string(pos) .. " is " .. bnb_core.item_readable(is_node.name) .. " but should be " .. bnb_core.item_readable(should_node.name).."."
     end
     msg = prefix .. msg
-    minetest.chat_send_all(minetest.colorize("#71aa34", msg))
+    return msg
 end
 
 bnb_core.finished = function(player)
     local same = true
     local all_air = true
     local unloaded = false
+    local fail_msg_clone, fail_msg_mirror
     for x = bnb_core.building_min.x, bnb_core.building_max.x do
     for y = bnb_core.building_min.y, bnb_core.building_max.y do
     for z = bnb_core.building_min.z, bnb_core.building_max.z do
@@ -102,7 +103,7 @@ bnb_core.finished = function(player)
         end
         if node.name ~= node_demo.name then
             if same then--only send one msg for each type at a time
-                wrong_node_message(pos, node, node_demo, "If you are building an exact clone: ")
+                fail_msg_clone = wrong_node_message(pos, node, node_demo, "If you are building an exact clone: ")
             end
             same = false
         end
@@ -130,7 +131,7 @@ bnb_core.finished = function(player)
             local node_demo = minetest.get_node(pos_demo)
             if node.name ~= node_demo.name then
                 if mirror_same then
-                    wrong_node_message(pos, node, node_demo, "If you are building a mirror: ")
+                    fail_msg_mirror = wrong_node_message(pos, node, node_demo, "If you are building a mirror: ")
                 end
                 mirror_same = false
             end
@@ -160,8 +161,13 @@ bnb_core.finished = function(player)
         --place demo schem
         bnb_schems.place_demo(bnb_core.demo_min, bnb_core.demo_max)
     else
-        --minetest.chat_send_all(minetest.colorize("#71aa34", fail_msg))
         minetest.sound_play({name="bnb_core_submit_fail"}, {to_player=player:get_player_name()}, true)
+        if fail_msg_clone then
+           minetest.chat_send_all(minetest.colorize("#71aa34", fail_msg_clone))
+        end
+        if fail_msg_mirror then
+           minetest.chat_send_all(minetest.colorize("#71aa34", fail_msg_mirror))
+        end
     end
 end
 
