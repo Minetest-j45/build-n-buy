@@ -268,6 +268,7 @@ local register_sign = function(name, desc, tilez)
         walkable = false,
         paramtype = "light",
         sunlight_propagates = true,
+        use_texture_alpha = "clip",
     })
 end
 for i=0, 25 do
