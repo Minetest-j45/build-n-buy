@@ -59,7 +59,7 @@ bnb_schems.demos = {
     "spring",
     "stone_circle",
     "traffic_lights",
-    "pipe",
+    "water_pipe",
     "sheep",
     "snowmelt",
     "drizzle",
