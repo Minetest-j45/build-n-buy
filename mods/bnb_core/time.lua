@@ -26,7 +26,7 @@ minetest.register_on_joinplayer(function(player)
 end)
 
 minetest.register_on_newplayer(function(player)
-    bnb_core.reset_time()
+    bnb_core.reset_time(player)
 end)
 
 minetest.register_on_leaveplayer(function(player)

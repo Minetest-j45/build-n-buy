@@ -10,24 +10,40 @@ bnb_core.spawnmax = {x = 5, y = 8, z = 5}
 bnb_core.arenamin = {x = -19, y = 100, z = -11}
 bnb_core.arenamax = {x = 19, y = 109, z = 11}
 bnb_core.shopmin = {x = -27, y = 300, z = -29}
-bnb_core.shopmax = {x = 21, y = 300, z = 20}
+bnb_core.shopmax = {x = 21, y = 325, z = 20}
+
+local REWARD = 50 -- reward for completing a building
+local PASSIVE_INCOME_TIMER = 10 -- give 1 free coin after this number of seconds
+local BLOCK_COST = 1 -- cost of 1 block
 
 local mod_storage = minetest.get_mod_storage()--must be called at load time
 local modpath = minetest.get_modpath(minetest.get_current_modname())
 dofile(modpath.."/time.lua")
 
+bnb_core.item_readable = function(itemstring)
+   if minetest.registered_items[itemstring] then
+      local stack = ItemStack(itemstring)
+      return stack:get_short_description()
+   else
+      return itemstring
+   end
+end
 
 bnb_core.tp_build = function(player)
     player:set_pos(bnb_core.play_pos)
+    minetest.sound_play({name="bnb_core_teleport"}, {pos=player:get_pos()}, true)
+    bnb_core.not_afk(player)
 end
 
 bnb_core.tp_shop = function(player)
     player:set_pos(bnb_core.shop_pos)
+    minetest.sound_play({name="bnb_core_teleport"}, {pos=player:get_pos()}, true)
+    bnb_core.not_afk(player)
 end
 
 bnb_core.start = function(player)
     bnb_core.tp_build(player)
-    bnb_coins.add_player_coins(player:get_player_name(), 50)
+    bnb_coins.add_player_coins(player:get_player_name(), REWARD)
     --place schem
     bnb_schems.place_demo(bnb_core.demo_min, bnb_core.demo_max)
     bnb_core.reset_time(player)
@@ -53,9 +69,24 @@ bnb_core.set_areas_air = function ()
     end
 end
 
+local function wrong_node_message(pos, is_node, should_node, prefix)
+    local msg
+    if is_node.name == "air" then
+        msg = "There's no block at " .. minetest.pos_to_string(pos) .. " but it should be " .. bnb_core.item_readable(should_node.name).."."
+    elseif should_node.name == "air" then
+        msg = "The block at " .. minetest.pos_to_string(pos) .. " is " .. bnb_core.item_readable(is_node.name) .. " but should be removed."
+    else
+        msg = "The block at " .. minetest.pos_to_string(pos) .. " is " .. bnb_core.item_readable(is_node.name) .. " but should be " .. bnb_core.item_readable(should_node.name).."."
+    end
+    msg = prefix .. msg
+    return msg
+end
+
 bnb_core.finished = function(player)
     local same = true
     local all_air = true
+    local unloaded = false
+    local fail_msg_clone, fail_msg_mirror
     for x = bnb_core.building_min.x, bnb_core.building_max.x do
     for y = bnb_core.building_min.y, bnb_core.building_max.y do
     for z = bnb_core.building_min.z, bnb_core.building_max.z do
@@ -63,26 +94,32 @@ bnb_core.finished = function(player)
         local node = minetest.get_node(pos)
         local pos_demo = {x = x+16, y = y, z = z}
         local node_demo = minetest.get_node(pos_demo)
-        if node.name ~= node_demo.name then
-            if same then--only send one msg for each type at a time
-                minetest.chat_send_all(minetest.colorize("#71aa34", "If you are building an exact clone: the node at " .. minetest.pos_to_string(pos) .. " is " .. node.name .. " but should be " .. node_demo.name))
-            end
-            same = false
-        end
         if node_demo.name ~= "air" then
             all_air = false
+        end
+        if node_demo.name == "ignore" then
+            unloaded = true
+            break
+        end
+        if node.name ~= node_demo.name then
+            if same then--only send one msg for each type at a time
+                fail_msg_clone = wrong_node_message(pos, node, node_demo, "If you are building an exact clone: ")
+            end
+            same = false
         end
     end
     end
     end
 
     local finished
-    if all_air then
+    if all_air or unloaded then
         finished = false
         minetest.chat_send_all(minetest.colorize("#71aa34", "Please wait for the demo to load, thanks for your patience!"))
-    elseif same and all_air == false then
+        minetest.load_area(bnb_core.demo_min, bnb_core.demo_max)
+        minetest.load_area(bnb_core.building_min, bnb_core.building_max)
+    elseif same and all_air == false and unloaded == false then
         finished = true
-    elseif same == false and all_air == false then
+    elseif same == false and all_air == false and unloaded == false then
         --check for mirrors
         local mirror_same = true
         for x = bnb_core.building_min.x, bnb_core.building_max.x do
@@ -94,7 +131,7 @@ bnb_core.finished = function(player)
             local node_demo = minetest.get_node(pos_demo)
             if node.name ~= node_demo.name then
                 if mirror_same then
-                    minetest.chat_send_all(minetest.colorize("#71aa34", "If you are building a mirror: the node at " .. minetest.pos_to_string(pos) .. " is " .. node.name .. " but should be " .. node_demo.name))
+                    fail_msg_mirror = wrong_node_message(pos, node, node_demo, "If you are building a mirror: ")
                 end
                 mirror_same = false
             end
@@ -116,20 +153,27 @@ bnb_core.finished = function(player)
         local time = bnb_core.get_time(player)
         bnb_core.reset_time(player)
 
-        local reward = 50--implement calculation with time
+        local reward = REWARD --implement calculation with time
         bnb_coins.add_player_coins(player:get_player_name(), reward)
         minetest.chat_send_all(minetest.colorize("#71aa34", "You have completed the building in "..time.." seconds! Well done, for doing this, you receive " .. reward .. " coins!"))
-
+        minetest.sound_play({name="bnb_core_submit_win"}, {to_player=player:get_player_name()}, true)
 
         --place demo schem
         bnb_schems.place_demo(bnb_core.demo_min, bnb_core.demo_max)
     else
-        --minetest.chat_send_all(minetest.colorize("#71aa34", fail_msg))
+        minetest.sound_play({name="bnb_core_submit_fail"}, {to_player=player:get_player_name()}, true)
+        if fail_msg_clone then
+           minetest.chat_send_all(minetest.colorize("#71aa34", fail_msg_clone))
+        end
+        if fail_msg_mirror then
+           minetest.chat_send_all(minetest.colorize("#71aa34", fail_msg_mirror))
+        end
     end
 end
 
 local punching = false
 minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
+    bnb_core.not_afk(puncher)
     if punching then
         return
     end
@@ -144,16 +188,26 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
             local nodename = node.name
             puncher:get_inventory():add_item("main", nodename)
             minetest.set_node(node_pos, {name = "air"})
+            minetest.sound_play({name="bnb_core_dig"}, {pos=node_pos}, true)
     elseif node_pos.x >= bnb_core.demo_min.x and node_pos.x <= bnb_core.demo_max.x and node_pos.z >= bnb_core.demo_min.z and node_pos.z <= bnb_core.demo_max.z and node_pos.y >= bnb_core.demo_min.y and node_pos.y <= bnb_core.demo_max.y then
             minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "This is the demo you need to replicate!"))
-    elseif node.name:find("bnb_nodes:shop_") then
-        local selling = node.name:gsub("shop_", "")
+    elseif minetest.get_item_group(node.name, "shop") == 1 then
+        local shopdef = minetest.registered_nodes[node.name]
+        local selling = shopdef._bnb_selling
         local coins = bnb_coins.get_player_coins(puncher:get_player_name())
-        if coins >= 1 then
-            bnb_coins.remove_player_coins(puncher:get_player_name(), 1)
-            puncher:get_inventory():add_item("main", selling)
+        if coins >= BLOCK_COST then
+            local inv = puncher:get_inventory()
+            if inv:room_for_item("main", selling) then
+               bnb_coins.remove_player_coins(puncher:get_player_name(), BLOCK_COST)
+               inv:add_item("main", selling)
+               minetest.sound_play({name="bnb_core_buy"}, {pos=puncher:get_pos()}, true)
+            else
+               minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "Your inventory is full!"))
+               minetest.sound_play({name="bnb_core_buy_fail"}, {to_player=puncher:get_player_name()}, true)
+            end
         else
             minetest.chat_send_player(puncher:get_player_name(), minetest.colorize("#71aa34", "You don't have enough coins!"))
+            minetest.sound_play({name="bnb_core_buy_fail"}, {to_player=puncher:get_player_name()}, true)
         end
     else
         return false
@@ -181,6 +235,8 @@ minetest.register_on_joinplayer(function(player)
             end
         end)
     end
+    minetest.load_area(bnb_core.demo_min, bnb_core.demo_max)
+    minetest.load_area(bnb_core.building_min, bnb_core.building_max)
 
     player:hud_set_hotbar_image("gui_hotbar.png")
     player:hud_set_hotbar_selected_image("gui_hotbar_selected.png")
@@ -193,7 +249,7 @@ minetest.register_on_joinplayer(function(player)
         eye_height = 1.47,
         textures = {"bob_skin.png"},
     })
-    minetest.sound_play("bg_music", {to_player = player:get_player_name(), gain = 0.6, loop = true})
+    minetest.sound_play("bnb_core_bg_music", {to_player = player:get_player_name(), gain = 0.6, loop = true}, true)
     --incase ppl have modified minetest.confs
     minetest.set_player_privs(player:get_player_name(), {fly = true, shout = true, interact = true})
     player:set_physics_override({
@@ -214,6 +270,8 @@ minetest.register_item(":", {
 minetest.register_on_chat_message(function(name, message)
     local newmsg = minetest.colorize("#b6d53c", "<"..name.."> "..message)
     minetest.chat_send_all(newmsg)
+    local player = minetest.get_player_by_name(name)
+    bnb_core.not_afk(player)
     return newmsg
 end)
 
@@ -224,6 +282,7 @@ minetest.register_on_craft(function(itemstack, player, old_craft_grid, craft_inv
 end)
 
 minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
+    bnb_core.not_afk(placer)
     if pos.x >= bnb_core.building_min.x and pos.x <= bnb_core.building_max.x and pos.z >= bnb_core.building_min.z and pos.z <= bnb_core.building_max.z and pos.y >= bnb_core.building_min.y and pos.y <= bnb_core.building_max.y then
         --its fine
     else
@@ -268,6 +327,16 @@ minetest.register_globalstep(function(dtime)
     end
 end)
 
+bnb_core.not_afk = function(player)
+    local pname = player:get_player_name()
+    afk[pname] = false
+    cachepos[pname] = player:get_pos()
+end
+minetest.register_on_chatcommand(function(pname)
+    local player = minetest.get_player_by_name(pname)
+    bnb_core.not_afk(player)
+end)
+
 minetest.register_on_leaveplayer(function(player)
     local pname = player:get_player_name()
     cachepos[pname] = nil
@@ -284,7 +353,7 @@ end)
 local timer = 0
 minetest.register_globalstep(function(dtime)
     timer = timer + dtime
-    if timer >= 10 then
+    if timer >= PASSIVE_INCOME_TIMER then
         timer = 0
         for _, player in ipairs(minetest.get_connected_players()) do
             local pname = player:get_player_name()
